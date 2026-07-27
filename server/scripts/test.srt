@@ -1,0 +1,11 @@
+1
+00:00:00,500 --> 00:00:02,000
+This is how Velora
+
+2
+00:00:02,100 --> 00:00:04,000
+builds captions that look amazing
+
+3
+00:00:04,100 --> 00:00:05,000
+on TikTok and Reels

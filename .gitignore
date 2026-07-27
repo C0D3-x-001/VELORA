@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.env
+.env.local
+.env.*.local
+server/temp/
+server/models/
+server/cookies.txt
+server/test_output*.ass
+server/test_caption_config.json
+*-player-script.js
+*.log
+.DS_Store
+Thumbs.db

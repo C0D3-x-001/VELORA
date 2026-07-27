@@ -1,0 +1,5002 @@
+VELORA — COMPLETE PRODUCT REQUIREMENTS DOCUMENT
+PART 1/10 — PRODUCT VISION & STRATEGY
+1. Product Overview
+Product Name
+
+Velora
+
+Tagline
+
+Turn long-form videos into viral short-form content.
+
+Product Category
+
+AI-powered content repurposing platform.
+
+One-line Description
+
+Velora transforms long-form videos such as podcasts, interviews, YouTube videos, and educational content into ready-to-post short-form clips using artificial intelligence.
+
+2. Vision
+The Problem
+
+Millions of creators produce long-form content every day:
+
+Podcasts
+Interviews
+YouTube videos
+Courses
+Webinars
+Livestreams
+
+However, short-form content is now one of the biggest growth channels:
+
+TikTok
+YouTube Shorts
+Instagram Reels
+
+The problem:
+
+Creating dozens of short clips manually requires:
+
+Watching hours of footage
+Finding interesting moments
+Editing videos
+Adding captions
+Writing titles
+Creating descriptions
+Formatting for platforms
+
+This takes hours or requires hiring an editor.
+
+3. Velora's Solution
+
+Velora acts as an AI content assistant.
+
+A creator uploads one long video.
+
+Velora:
+
+Understands the video
+Finds valuable moments
+Creates short clips
+Adds captions
+Scores the clips
+Generates titles
+Generates descriptions and hashtags
+
+The creator receives content ready to publish.
+
+4. Mission
+
+Make professional short-form content creation accessible to everyone.
+
+Velora's goal:
+
+Give every creator access to an AI editor that understands their content and helps them grow.
+
+5. Target Users
+Primary Users
+1. Content Creators
+
+Examples:
+
+YouTubers
+TikTok creators
+Instagram creators
+
+Needs:
+
+More content
+Faster workflow
+Better consistency
+2. Podcasters
+
+Problems:
+
+Episodes are 1–3 hours long
+Many potential clips are hidden inside
+Editing takes too much time
+
+Velora helps them turn:
+
+1 podcast episode →
+
+10–50 short videos
+
+3. Clip Entrepreneurs
+
+People who make money by:
+
+Finding viral moments
+Running theme pages
+Creating fan pages
+Managing creator accounts
+
+They need:
+
+Speed
+Volume
+Low editing cost
+Secondary Users (Future)
+Businesses
+Coaches
+Course creators
+Marketing agencies
+Media companies
+6. Product Positioning
+
+Velora is NOT:
+
+❌ Just a video cutter
+❌ A normal video editor
+❌ A generic AI tool
+
+Velora is:
+
+✅ An AI content repurposing studio.
+
+Positioning Statement
+
+For creators who have long videos but need more short-form content, Velora automatically discovers the best moments and transforms them into engaging clips ready for social platforms.
+
+7. Core Product Philosophy
+Simple workflow
+
+The user journey should always feel like:
+
+Upload
+   ↓
+AI Understands
+   ↓
+Generate Clips
+   ↓
+Review
+   ↓
+Download
+   ↓
+Post
+8. MVP Goal
+
+The first version of Velora has one mission:
+
+Prove that AI can reliably turn long videos into high-quality short-form content.
+
+The MVP is successful if users say:
+
+"I uploaded my video and got clips I would actually post."
+
+9. MVP Features
+Included
+Video Input
+
+✅ YouTube URL
+✅ Local video upload
+
+AI Processing
+
+✅ Video analysis
+✅ Transcription
+✅ AI moment detection
+✅ Clip generation
+✅ Caption generation
+✅ Viral Score
+
+Content Packaging
+
+✅ Titles
+✅ Captions
+✅ Hashtags
+
+User Management
+
+✅ Authentication
+✅ Dashboard
+✅ Projects
+✅ Credit balance
+
+Clip Management
+
+✅ Preview clips
+✅ Download clips
+✅ Rename clips
+✅ Delete clips
+✅ Regenerate clips
+✅ Caption controls
+
+10. Features NOT in MVP
+
+To avoid overbuilding:
+
+❌ Timeline editor
+❌ Advanced video effects
+❌ AI voice replacement
+❌ B-roll generation
+❌ Team accounts
+❌ Referral system
+❌ Mobile app
+
+These belong in future versions.
+
+11. Competitive Advantage
+
+Existing tools focus on:
+
+"Cut my video."
+
+Velora focuses on:
+
+"Help me create content that performs."
+
+Key differentiators:
+
+1. Viral Score
+
+Every clip receives:
+
+Score
+Reasoning
+Performance factors
+2. Complete Content Package
+
+Not just video.
+
+Each clip gets:
+
+Video
+Title
+Caption
+Hashtags
+3. Creator Economics
+
+Credit system allows:
+
+Affordable entry
+Predictable costs
+Scalable business model
+12. Business Model Overview
+Model
+
+Subscription + Credits
+
+Users pay monthly and receive processing credits.
+
+Free Plan
+
+Purpose:
+
+Let users experience Velora
+Convert users into paying customers
+
+Includes:
+
+50 credits
+Watermarked clips
+Limited usage
+Creator Plan
+
+Price:
+
+$10/month
+
+Includes:
+
+Monthly credits
+No watermark
+Better limits
+Faster processing
+Future Revenue
+
+Additional:
+
+Credit purchases
+Pro plans
+Agency plans
+Team accounts
+13. Success Metrics
+Product Metrics
+
+Track:
+
+Number of uploaded videos
+Clips generated
+Downloads
+Returning users
+Credits consumed
+Business Metrics
+
+Track:
+
+Monthly recurring revenue (MRR)
+Conversion rate
+Customer retention
+Cost per generated clip
+Profit per user
+User Success Metric
+
+The most important:
+
+How many generated clips are downloaded and posted?
+
+A clip that gets downloaded is a better signal than a clip that is simply generated.
+
+14. Long-Term Vision
+
+Velora starts as:
+
+AI clip generator
+
+Becomes:
+
+AI content operating system for creators
+
+Future possibilities:
+
+AI editing assistant
+Content calendar
+Performance analytics
+Audience insights
+Automatic repurposing across platforms
+Creator workspace
+
+PART 2/10 — BRAND & DESIGN SYSTEM
+1. Brand Identity
+Brand Name
+
+Velora
+
+Brand Meaning
+
+Velora represents:
+
+Speed
+Intelligence
+Creativity
+Transformation
+
+The name is designed to feel like a premium technology company, not just a tool.
+
+2. Brand Position
+Brand Statement
+
+Velora is a premium AI content studio that helps creators transform long-form content into high-performing short-form videos.
+
+3. Brand Personality
+
+Velora should feel:
+
+Premium
+
+Users should feel they are using professional-grade software.
+
+Intelligent
+
+The product should feel like it understands content, not just processes files.
+
+Fast
+
+The workflow should feel effortless.
+
+Creative
+
+The product should inspire creators.
+
+Simple
+
+Complex AI should feel easy.
+
+4. Brand Voice
+Communication Style
+
+Velora communicates:
+
+Clearly
+Confidently
+Creatively
+Professionally
+Examples
+Good:
+
+Your next viral clip is waiting.
+
+Turn one episode into weeks of content.
+
+Velora found 12 moments worth sharing.
+
+Avoid:
+
+Processing neural video extraction parameters.
+
+Too technical.
+
+5. Logo Direction
+Concept
+
+Minimal "V" symbol.
+
+Ideas:
+
+Option 1:
+
+A V shaped like:
+
+A play button
+A video timeline
+A rising graph
+
+Meaning:
+
+Content → Growth
+
+Option 2:
+
+A simple V with gradient lighting.
+
+Premium AI feeling.
+
+Logo Usage
+
+Should work on:
+
+Website
+Dashboard
+Mobile icon
+Social media
+App icon
+6. Visual Theme
+Theme
+
+Premium Dark AI Creator Studio
+
+The interface should feel like:
+
+Professional editing software
+Modern SaaS
+AI workspace
+7. Color System (LOCKED)
+Primary Background
+Obsidian Black
+#0B0B0F
+
+Usage:
+
+Main background
+Landing page
+Dashboard
+Surface Color
+Deep Charcoal
+#14141C
+
+Usage:
+
+Cards
+Modals
+Panels
+Primary Brand Color
+Velora Blue
+#2563EB
+
+Usage:
+
+Buttons
+Active states
+Links
+Important actions
+AI Accent
+Electric Violet
+#7C3AED
+
+Usage:
+
+AI features
+Processing states
+Premium features
+Highlight Color
+Soft Cyan
+#22D3EE
+
+Usage:
+
+Progress indicators
+AI animations
+Special highlights
+8. Text Colors
+Primary Text
+#FFFFFF
+
+Used for:
+
+Headlines
+Important information
+Secondary Text
+#A1A1AA
+
+Used for:
+
+Descriptions
+Labels
+Muted Text
+#71717A
+
+Used for:
+
+Metadata
+Disabled states
+9. Typography
+Style
+
+Modern sans-serif.
+
+Recommended fonts:
+
+Primary:
+
+Inter
+
+Alternative:
+
+Geist
+Manrope
+Typography Scale
+Hero
+
+Large:
+
+64px+
+
+Purpose:
+Landing page impact.
+
+Page Titles
+32px - 40px
+Section Titles
+24px - 28px
+Body
+16px
+Small Text
+14px
+10. Spacing System
+
+Use consistent spacing.
+
+Base unit:
+
+4px
+
+Examples:
+
+Small gap:
+
+8px
+
+Normal:
+
+16px
+
+Large:
+
+32px
+
+Section spacing:
+
+64px+
+11. Border Style
+
+Avoid heavy borders.
+
+Use:
+
+Soft borders
+Subtle shadows
+Glass effects
+
+Example:
+
+Cards:
+
+background:
+#14141C
+
+border:
+rgba(255,255,255,0.08)
+12. Component Style
+Buttons
+
+Primary:
+
+Blue background
+White text
+Rounded corners
+Smooth hover animation
+
+Example:
+
+[ Start Creating ]
+
+Secondary:
+
+Transparent
+Light border
+
+Example:
+
+[ Watch Demo ]
+13. Cards
+
+Used for:
+
+Projects
+Clips
+Pricing
+Features
+
+Style:
+
+Rounded corners
+Video thumbnail focus
+Minimal information
+Hover animation
+
+Example:
+
+---------------------
+
+Podcast Episode
+
+10 clips generated
+
+🔥 Average score 89
+
+[Open]
+
+---------------------
+14. Animation System
+
+Animations should feel premium.
+
+Page Transitions
+Fade
+Slide
+Smooth movement
+AI Processing Animation
+
+Example:
+
+Analyzing video...
+
+🎬 Finding moments
+🧠 Understanding content
+✨ Creating clips
+Hover Effects
+
+Cards:
+
+Slight lift
+Shadow increase
+Smooth transition
+15. Responsive Design
+
+Velora must work on:
+
+Desktop
+
+Primary experience.
+
+Recommended:
+
+1440px layout
+Tablet
+
+Adapt dashboard.
+
+Mobile
+
+Users should be able to:
+
+Check projects
+Download clips
+Manage account
+
+Heavy editing remains desktop-focused.
+
+16. Accessibility
+
+Requirements:
+
+Keyboard navigation
+Good contrast
+Clear labels
+Screen-reader friendly
+Avoid relying only on color
+17. UI Design Principles
+Principle 1:
+
+One screen = one main action.
+
+Example:
+
+Upload page:
+
+Upload your video
+
+Not:
+
+Upload + billing + settings + analytics
+
+Principle 2:
+
+Show progress.
+
+Never leave users wondering.
+
+Principle 3:
+
+Make AI understandable.
+
+Don't say:
+
+Processing.
+
+Say:
+
+Finding the strongest moments in your video.
+
+Principle 4:
+
+Celebrate results.
+
+The generated clips are the product.
+
+Make them beautiful.
+
+3
+ART 3/10 — USER EXPERIENCE (UX)
+1. UX Goal
+
+Velora's UX should make a complex AI workflow feel simple.
+
+The user should feel:
+
+"I upload a video, Velora understands it, and I get content ready to post."
+
+The entire experience follows:
+
+Discover
+   ↓
+Sign Up
+   ↓
+Upload Video
+   ↓
+Customize Clips
+   ↓
+AI Processing
+   ↓
+Review Results
+   ↓
+Download & Publish
+2. User Journey Overview
+New User Journey
+Landing Page
+
+↓
+
+Create Account
+
+↓
+
+Receive 50 Free Credits
+
+↓
+
+Dashboard
+
+↓
+
+Create First Project
+
+↓
+
+Upload Video
+
+↓
+
+Choose Clip Settings
+
+↓
+
+AI Generates Clips
+
+↓
+
+Review Clips
+
+↓
+
+Download
+3. Landing Page UX
+Goal
+
+Convert visitors into users.
+
+The landing page should answer:
+
+What is Velora?
+How does it work?
+Why should I trust it?
+How do I start?
+Landing Page Flow
+Section 1 — Hero
+Purpose:
+
+Immediately explain value.
+
+Layout:
+
+Left:
+
+Velora
+
+Turn long-form videos into viral short-form content.
+
+Upload podcasts, interviews, and videos.
+Let AI find your best moments.
+
+[Start Creating Free]
+
+[Watch Demo]
+
+Right:
+
+Animated product preview:
+
+Long Video
+    ↓
+AI Analysis
+    ↓
+10 Viral Clips
+Section 2 — Trusted By
+
+Future section.
+
+Purpose:
+
+Build credibility.
+
+Contains:
+
+Creator logos
+User count
+Testimonials
+
+Hidden until enough users exist.
+
+Section 3 — How It Works
+
+Three simple steps.
+
+Step 1
+
+Upload
+
+Paste YouTube link
+or upload video
+Step 2
+
+AI Finds Moments
+
+AI analyzes:
+- Story
+- Emotion
+- Hooks
+- Engagement potential
+Step 3
+
+Download Clips
+
+Ready-to-post Shorts,
+Reels, and TikToks
+Section 4 — Features
+
+Feature cards:
+
+AI Clip Detection
+
+Finds the strongest moments automatically.
+
+Auto Captions
+
+Creates readable captions.
+
+Default:
+ON
+
+Viral Score
+
+Ranks clips by AI prediction.
+
+Content Package
+
+Generates:
+
+Titles
+Captions
+Hashtags
+Multiple Platforms
+
+Optimized for:
+
+YouTube Shorts
+TikTok
+Instagram Reels
+Section 5 — Before & After
+
+Very important conversion section.
+
+Example:
+
+Before:
+
+2 hour podcast episode
+
+After:
+
+Clip 1
+Clip 2
+Clip 3
+...
+Clip 10
+
+Shows the transformation.
+
+Section 6 — Pricing
+
+Simple.
+
+Plans:
+
+Free
+50 credits
+Watermark
+Basic features
+Creator
+$10/month
+
+Monthly credits
+No watermark
+Full experience
+Future Pro
+More credits
+Priority processing
+Advanced features
+Section 7 — FAQ
+
+Common questions:
+
+How long can videos be?
+
+Maximum:
+3 hours.
+
+Do I need editing experience?
+
+No.
+
+Velora does the work.
+
+Can I remove captions?
+
+Yes.
+
+What platforms are supported?
+
+YouTube Shorts,
+TikTok,
+Instagram Reels.
+
+Section 8 — Final CTA
+
+Large conversion section:
+
+Ready to create your first viral clips?
+
+[Start Creating Free]
+4. Authentication UX
+
+Provider:
+
+Clerk.
+
+Signup Flow
+
+User clicks:
+
+Start Creating Free
+
+↓
+
+Signup page
+
+Options:
+
+Google
+Email/password
+
+↓
+
+Account created
+
+↓
+
+50 credits automatically added
+
+↓
+
+Dashboard
+
+5. First-Time Onboarding
+
+Goal:
+
+Help user create first project quickly.
+
+Welcome Screen
+Welcome to Velora 👋
+
+Turn your long videos into viral clips.
+
+You have:
+50 free credits
+
+[Create Your First Project]
+Onboarding Checklist
+
+Dashboard widget:
+
+Getting Started
+
+✓ Create account
+
+○ Upload your first video
+
+○ Generate clips
+
+○ Download your first clip
+6. Dashboard UX
+
+Dashboard is the user's workspace.
+
+Header
+
+Contains:
+
+Left:
+
+Velora Logo
+
+Center:
+
+Navigation:
+
+Projects
+Credits
+Billing
+
+Right:
+
+Profile
+Settings
+Main Dashboard
+Welcome Area
+
+Example:
+
+Good morning 👋
+
+Ready to create more content?
+
+[+ New Project]
+Credit Card
+
+Shows:
+
+Credits
+
+450 / 1200
+
+[Buy Credits]
+Recent Projects
+
+Cards:
+
+Podcast Episode
+
+10 clips generated
+
+🔥 Average Score: 89
+
+[Open]
+7. Create Project UX
+
+User clicks:
+
++ New Project
+
+Screen:
+
+How do you want to add your video?
+
+[Paste YouTube Link]
+
+[Upload Video]
+8. Upload Experience
+YouTube
+
+User enters:
+
+https://youtube.com/video
+
+Velora:
+
+Checks URL
+Gets metadata
+Gets duration
+
+Shows:
+
+Video Found ✅
+
+Title:
+AI Podcast Episode
+
+Duration:
+2h 15m
+
+[Continue]
+Local Upload
+
+User selects file.
+
+Supported:
+
+MP4
+MOV
+MKV
+
+Shows:
+
+Uploading...
+
+85%
+
+Processing video information...
+9. Clip Settings UX
+
+After video analysis:
+
+User chooses:
+
+Number of Clips
+
+Options:
+
+5
+10
+20
+Custom
+Clip Length
+
+Options:
+
+30 seconds
+60 seconds
+90 seconds
+Platform
+
+Options:
+
+TikTok
+YouTube Shorts
+Instagram Reels
+Captions
+
+Default:
+
+ON
+
+Options:
+
+Modern
+Karaoke
+Minimal
+None
+
+Before generating:
+
+Show:
+
+Estimated Cost
+
+120 Credits
+
+Your Balance:
+
+450 Credits
+
+[Generate Clips]
+10. Processing UX
+
+Never show a boring loading screen.
+
+Display:
+
+Velora is creating your clips ✨
+
+✓ Upload complete
+
+✓ Understanding video
+
+◉ Finding viral moments
+
+○ Creating captions
+
+○ Rendering clips
+11. Results UX
+
+Main success screen.
+
+Project:
+
+Your clips are ready 🎉
+
+Clip Cards:
+
+Video Preview
+
+🔥 Viral Score 94
+
+Title:
+"The AI Revolution Nobody Expected"
+
+Caption:
+...
+
+Hashtags:
+...
+
+[Download]
+
+[Copy Caption]
+12. Empty States
+
+Every page needs guidance.
+
+Example:
+
+No projects:
+
+You haven't created anything yet.
+
+Upload your first video and let Velora find the moments.
+
+[Create Project]
+13. Error Experience
+
+Errors should be human.
+
+Bad:
+
+Error 500
+
+Good:
+
+We couldn't process this video.
+
+Your credits were refunded.
+
+Try again or upload another file.
+14. UX Principles Summary
+
+Velora must always be:
+
+✅ Simple
+✅ Fast
+✅ Transparent
+✅ Creator-focused
+✅ AI-assisted
+✅ Beautiful
+
+The user should never feel confused about:
+
+What is happening
+How much it costs
+What they receive
+
+PART 4/10 — CORE FEATURES
+1. Core Feature Overview
+
+Velora's core purpose:
+
+Take long-form videos and automatically create high-quality short-form content.
+
+The main pipeline:
+
+Video Input
+     ↓
+Video Analysis
+     ↓
+AI Understanding
+     ↓
+Moment Detection
+     ↓
+Clip Generation
+     ↓
+Captions
+     ↓
+AI Content Package
+     ↓
+Viral Score
+     ↓
+Ready-to-post Clips
+2. Video Input System
+Supported Sources (MVP)
+1. YouTube URL
+
+Users can paste:
+
+YouTube videos
+YouTube podcasts
+Interviews
+Educational videos
+
+Flow:
+
+User enters URL
+
+↓
+
+Velora validates link
+
+↓
+
+Fetch video information
+
+↓
+
+Display preview
+
+↓
+
+User continues
+
+Information collected:
+
+Title
+Thumbnail
+Duration
+Channel name
+Video ID
+2. Local Upload
+
+Users can upload:
+
+Supported formats:
+
+MP4
+MOV
+MKV
+
+Maximum length:
+
+3 hours
+
+Upload requirements:
+
+Show upload progress
+Validate file type
+Validate duration
+Store securely
+3. Video Analysis System
+
+Before generating clips, Velora analyzes:
+
+Video Metadata
+Duration
+Resolution
+Audio quality
+Frame rate
+Content Understanding
+
+AI analyzes:
+
+Main topics
+Speaker changes
+Important moments
+Stories
+Questions
+Emotional sections
+
+Output:
+
+Video Summary:
+
+Topic:
+Artificial Intelligence
+
+Main Points:
+- Future of AI
+- Business impact
+- Common mistakes
+
+Potential Clips:
+15
+4. AI Transcription
+Purpose
+
+Convert speech into text.
+
+Technology:
+
+Whisper-based transcription
+
+Creates:
+
+Full transcript
+Timestamps
+Speaker segments
+
+Example:
+
+00:14:23
+
+Speaker:
+"The biggest mistake people make with AI..."
+
+00:14:35
+
+Speaker:
+"They focus on tools instead of problems."
+
+Transcript is used for:
+
+Finding moments
+Captions
+Search
+AI scoring
+5. AI Clip Detection
+
+This is Velora's main intelligence.
+
+The AI searches for moments with high potential.
+
+Detection Factors
+Hook Strength
+
+Does the clip start strongly?
+
+Example:
+
+Good:
+
+"Nobody tells you this about starting a business..."
+
+Bad:
+
+"Today we are going to discuss..."
+
+Emotional Value
+
+Looks for:
+
+Surprise
+Excitement
+Controversy
+Humor
+Inspiration
+Story Completion
+
+A good clip should make sense alone.
+
+Avoid:
+
+Missing context
+Random sentences
+Incomplete thoughts
+Information Value
+
+Finds:
+
+Useful advice
+Interesting facts
+Unique opinions
+6. Clip Generation
+
+After identifying moments:
+
+Velora creates clips.
+
+Clip Settings
+
+User chooses:
+
+Length
+30 seconds
+60 seconds
+90 seconds
+Number
+
+Options:
+
+5 clips
+10 clips
+20 clips
+Custom
+Platform
+
+Optimizes for:
+
+YouTube Shorts
+TikTok
+Instagram Reels
+7. Video Processing
+
+Technology:
+
+FFmpeg
+
+Handles:
+
+Cutting clips
+Aspect ratio conversion
+Rendering
+Compression
+
+Default format:
+
+Vertical:
+
+9:16
+
+1080 x 1920
+8. Caption System
+
+Captions are enabled by default.
+
+Purpose:
+
+Increase retention.
+
+Caption Features
+
+Users can:
+
+Enable/disable captions
+Choose style
+
+MVP Styles:
+
+Modern
+
+Clean subtitles.
+
+Karaoke
+
+Words highlight as spoken.
+
+Minimal
+
+Simple professional captions.
+
+9. Viral Score System
+
+Every clip receives:
+
+Score:
+
+0–100
+
+Example:
+
+🔥 Viral Score: 92/100
+
+Reasons:
+
+✓ Strong opening hook
+✓ Emotional moment
+✓ Clear message
+✓ Good standalone context
+Score Factors
+
+AI evaluates:
+
+Hook
+Engagement potential
+Story quality
+Emotional impact
+Clarity
+Length suitability
+
+Important:
+
+The score is an AI prediction, not a guarantee.
+
+10. AI Content Package
+
+Every clip receives:
+
+Title Generation
+
+Creates clickable titles.
+
+Example:
+
+Video:
+
+Business podcast
+
+Generated title:
+
+"The $1M Mistake Entrepreneurs Keep Making"
+
+Caption Generation
+
+Creates social descriptions.
+
+Example:
+
+Most creators focus on views, but they ignore this important factor...
+
+Hashtag Generation
+
+Creates relevant tags.
+
+Example:
+
+#Business
+#Podcast
+#Entrepreneur
+#Shorts
+11. Project System
+
+One upload = one project.
+
+Project contains:
+
+Project
+
+├── Original Video
+
+├── Transcript
+
+├── Generated Clips
+
+├── Titles
+
+├── Captions
+
+├── Hashtags
+
+├── Credit History
+
+└── Processing Status
+12. Clip Management
+
+Users can:
+
+Preview
+
+Watch generated clips.
+
+Rename
+
+Change clip name.
+
+Download
+
+Export video.
+
+Delete
+
+Remove unwanted clips.
+
+Regenerate
+
+Create new versions.
+
+Caption Control
+
+Change:
+
+Style
+Enabled/disabled
+13. Credit System
+
+Velora uses credits instead of unlimited processing.
+
+Reason:
+
+Video AI has real processing costs.
+
+Credit Usage Factors
+
+Credits depend on:
+
+Video length analyzed
+Number of clips
+Clip duration
+Processing complexity
+
+Example:
+
+30 sec clip:
+10 credits
+
+60 sec clip:
+15 credits
+
+90 sec clip:
+25 credits
+
+(Final values can change after cost testing.)
+
+14. Credit Purchases
+
+Future packs:
+
+Example:
+
+Starter:
+
+500 credits
+$5
+
+Creator:
+
+1200 credits
+$10
+
+Pro:
+
+3000 credits
+$20
+15. Refund System
+
+If processing fails:
+
+Automatically:
+
+Refund used credits
+Notify user
+Allow retry
+16. MVP Feature Priority
+Must Have
+
+🔥 Video upload
+🔥 YouTube import
+🔥 Transcription
+🔥 AI clip detection
+🔥 Clip generation
+🔥 Captions
+🔥 Viral Score
+🔥 Titles/captions/hashtags
+🔥 Credits
+🔥 Dashboard
+
+Later
+AI editor
+Team workspaces
+Referral system
+Analytics
+Mobile app
+
+PART 5/10 — FRONTEND SPECIFICATION
+1. Frontend Overview
+
+The Velora frontend is responsible for:
+
+User interface
+User experience
+Authentication flow
+Dashboard
+Video uploads
+Project management
+Clip viewing
+Billing interface
+
+The frontend should feel like a premium SaaS application.
+
+2. Frontend Technology Stack
+Core
+React
+
+Purpose:
+
+Build reusable UI components
+Manage application views
+Create interactive experiences
+Styling
+Tailwind CSS
+
+Purpose:
+
+Fast UI development
+Consistent design system
+Responsive layouts
+Authentication
+Clerk React SDK
+
+Handles:
+
+Signup
+Login
+User sessions
+Protected routes
+User profile
+Database Communication
+Supabase Client
+
+Used for:
+
+Fetching project data
+Storage interactions
+Real-time updates
+Routing
+
+Recommended:
+
+React Router
+
+Handles:
+
+Public pages
+Dashboard routes
+Protected areas
+3. Frontend Architecture
+
+Structure:
+
+src/
+
+├── assets/
+
+├── components/
+
+├── pages/
+
+├── layouts/
+
+├── hooks/
+
+├── services/
+
+├── context/
+
+├── utils/
+
+├── api/
+
+├── styles/
+
+└── App.jsx
+4. Folder Structure
+Components
+
+Reusable UI pieces.
+
+components/
+
+├── Button/
+
+├── Card/
+
+├── Modal/
+
+├── Navbar/
+
+├── Sidebar/
+
+├── VideoPlayer/
+
+├── ClipCard/
+
+├── CreditBadge/
+
+├── UploadBox/
+
+├── ProgressBar/
+
+└── Toast/
+Pages
+
+Application screens.
+
+pages/
+
+├── Landing/
+
+├── Login/
+
+├── Signup/
+
+├── Dashboard/
+
+├── CreateProject/
+
+├── ProjectDetails/
+
+├── Processing/
+
+├── Results/
+
+├── Billing/
+
+├── Settings/
+
+└── Profile/
+Services
+
+API communication.
+
+services/
+
+├── authService.js
+
+├── projectService.js
+
+├── uploadService.js
+
+├── clipService.js
+
+├── billingService.js
+
+└── aiService.js
+5. Application Routes
+Public Routes
+/
+
+Landing page
+
+/login
+
+User login
+
+/signup
+
+Account creation
+
+Protected Routes
+
+Require authentication.
+
+/dashboard
+
+Main user workspace
+
+/projects/:id
+
+Project details
+
+/create
+
+Create new project
+
+/billing
+
+Subscription management
+
+/settings
+
+Account settings
+
+6. Main Frontend Screens
+Landing Page
+
+Components:
+
+LandingPage
+
+├── Navbar
+
+├── HeroSection
+
+├── DemoAnimation
+
+├── Features
+
+├── HowItWorks
+
+├── BeforeAfter
+
+├── Pricing
+
+├── FAQ
+
+└── Footer
+Dashboard
+
+Purpose:
+
+User command center.
+
+Components:
+
+Dashboard
+
+├── WelcomeHeader
+
+├── CreditCard
+
+├── CreateButton
+
+├── RecentProjects
+
+├── ProjectCard
+
+└── ActivityFeed
+Create Project Page
+
+Purpose:
+
+Start video processing.
+
+Components:
+
+CreateProject
+
+├── SourceSelector
+
+├── YoutubeInput
+
+├── FileUploader
+
+├── VideoPreview
+
+└── ContinueButton
+Video Settings Page
+
+Components:
+
+ClipSettings
+
+├── ClipCountSelector
+
+├── DurationSelector
+
+├── PlatformSelector
+
+├── CaptionSelector
+
+├── CreditCalculator
+
+└── GenerateButton
+Processing Page
+
+Purpose:
+
+Show AI progress.
+
+Components:
+
+ProcessingPage
+
+├── ProgressAnimation
+
+├── CurrentStep
+
+├── EstimatedStatus
+
+└── CancelButton
+Results Page
+
+Most important page.
+
+Components:
+
+ResultsPage
+
+├── ProjectHeader
+
+├── ClipGrid
+
+├── ClipCard
+
+│    ├── VideoPreview
+│    ├── ViralScore
+│    ├── Title
+│    ├── Caption
+│    ├── Hashtags
+│    └── Actions
+
+└── DownloadAllButton
+7. State Management
+
+Recommended:
+
+React Context
+
+For:
+
+User state
+Theme
+Global UI
+Server State
+
+Recommended:
+
+React Query
+
+Handles:
+
+API requests
+Caching
+Loading states
+Refetching
+
+Example:
+
+Projects:
+
+Loading
+ ↓
+Fetch projects
+ ↓
+Cache data
+ ↓
+Update UI
+8. Frontend Data Flow
+
+Example:
+
+User creates project:
+
+User clicks Generate
+
+↓
+
+Frontend validates credits
+
+↓
+
+Send request to backend
+
+↓
+
+Backend creates job
+
+↓
+
+Frontend receives job ID
+
+↓
+
+Show processing screen
+
+↓
+
+Listen for updates
+
+↓
+
+Show completed clips
+9. Upload Experience
+
+Frontend responsibilities:
+
+Drag and drop
+File validation
+Upload progress
+Preview
+Error handling
+
+Example:
+
+Upload Video
+
+0% ───────── 100%
+
+Processing...
+10. UI States
+
+Every component needs:
+
+Loading State
+
+Example:
+
+Generating clips...
+Empty State
+
+Example:
+
+No projects yet.
+
+Create your first video.
+Error State
+
+Example:
+
+Upload failed.
+
+Try again.
+Success State
+
+Example:
+
+Your clips are ready 🎉
+11. Responsive Design
+Desktop First
+
+Primary users are creators working with videos.
+
+Optimized for:
+
+1440px
+1200px
+1024px
+Mobile Support
+
+Mobile users can:
+
+Login
+View projects
+Download clips
+Manage billing
+12. Frontend Security
+
+Must include:
+
+Protected routes
+User session validation
+Secure API requests
+Input sanitization
+File validation
+13. Performance Requirements
+
+Frontend should:
+
+Lazy load pages
+Compress images
+Optimize video previews
+Avoid unnecessary renders
+Cache API responses
+14. Developer Rules
+Components must be:
+Reusable
+Small
+Clearly named
+
+Avoid:
+
+Huge 2000 line components
+
+Prefer:
+
+Small components working together
+15. Frontend MVP Checklist
+
+✅ Landing page
+✅ Authentication
+✅ Dashboard
+✅ Upload flow
+✅ Project management
+✅ Processing screen
+✅ Results page
+✅ Clip cards
+✅ Billing page
+✅ Settings page
+PART 6/10 — BACKEND SPECIFICATION
+1. Backend Overview
+
+The Velora backend is responsible for:
+
+User data management
+Video processing
+AI communication
+Credit calculations
+Project management
+Clip generation
+Payments
+Background jobs
+
+The backend is the engine behind Velora.
+
+2. Backend Technology Stack
+Runtime
+Node.js
+
+Purpose:
+
+Fast server-side processing
+Large ecosystem
+Good for API development
+Framework
+Express.js
+
+Handles:
+
+API routes
+Middleware
+Authentication checks
+Requests/responses
+Database
+Supabase PostgreSQL
+
+Stores:
+
+Users
+Projects
+Clips
+Credits
+Payments
+Processing history
+Storage
+Supabase Storage
+
+Stores:
+
+Original videos
+Generated clips
+Thumbnails
+Temporary files
+Authentication
+Clerk
+
+Backend verifies:
+
+User identity
+Sessions
+Permissions
+3. Backend Architecture
+
+Velora uses a service-based architecture.
+
+ id="w8mp5x"
+Backend API
+
+      |
+      |
+      ├── Auth Service
+      |
+      ├── Project Service
+      |
+      ├── Video Service
+      |
+      ├── AI Service
+      |
+      ├── Processing Service
+      |
+      ├── Credit Service
+      |
+      ├── Payment Service
+      |
+      └── Notification Service
+4. Backend Folder Structure
+
+Recommended:
+
+server/
+
+├── src/
+
+│   ├── controllers/
+
+│   ├── routes/
+
+│   ├── services/
+
+│   ├── workers/
+
+│   ├── queues/
+
+│   ├── middleware/
+
+│   ├── database/
+
+│   ├── utils/
+
+│   ├── config/
+
+│   └── app.js
+
+├── package.json
+
+└── .env
+5. API Architecture
+
+Base URL:
+
+/api/v1
+Authentication Routes
+
+Handled mainly by Clerk.
+
+Backend endpoints:
+
+GET /api/v1/user/profile
+
+Returns:
+
+{
+ "id":"",
+ "email":"",
+ "credits":50
+}
+6. Project API
+Create Project
+POST /projects
+
+Purpose:
+
+Create a new video project.
+
+Request:
+
+{
+"title":"Podcast Episode",
+"source":"youtube",
+"url":"..."
+}
+
+Response:
+
+{
+"projectId":"",
+"status":"created"
+}
+Get Projects
+GET /projects
+
+Returns user projects.
+
+Get Single Project
+GET /projects/:id
+
+Returns:
+
+Video information
+Clips
+Status
+Credits used
+Delete Project
+DELETE /projects/:id
+7. Upload System
+Upload Flow
+ id="8m3g4t"
+User selects file
+
+↓
+
+Frontend uploads
+
+↓
+
+Backend validates
+
+↓
+
+Storage saves file
+
+↓
+
+Project created
+
+↓
+
+Processing starts
+
+Validation:
+
+Check:
+
+File type
+File size
+Duration
+User limits
+8. Video Processing Service
+
+Main responsibility:
+
+Convert uploaded videos into clips.
+
+Pipeline:
+
+ id="i7x5bp"
+Original Video
+
+↓
+
+Extract Audio
+
+↓
+
+Transcribe
+
+↓
+
+AI Analysis
+
+↓
+
+Find Moments
+
+↓
+
+Cut Clips
+
+↓
+
+Add Captions
+
+↓
+
+Generate Metadata
+
+↓
+
+Save Results
+9. AI Service
+
+Responsible for communication with AI models.
+
+Responsibilities
+Transcription
+
+Input:
+
+Video audio
+
+Output:
+
+Timestamp transcript
+
+Content Analysis
+
+AI identifies:
+
+Important moments
+Stories
+Hooks
+Emotional sections
+Content Generation
+
+Creates:
+
+Titles
+Captions
+Hashtags
+10. FFmpeg Processing Service
+
+FFmpeg handles video operations.
+
+Functions:
+
+Extract Audio
+Video → Audio
+Cut Clips
+
+Example:
+
+01:20:00
+to
+01:21:00
+
+creates:
+
+60 second clip.
+
+Convert Format
+
+Changes:
+
+Horizontal:
+
+16:9
+
+to:
+
+Vertical:
+
+9:16
+Render Captions
+
+Burn subtitles into video.
+
+11. Background Job System
+
+Important.
+
+Video processing can take minutes.
+
+Never process inside a normal API request.
+
+Architecture:
+
+ id="s3v92p"
+API
+
+↓
+
+Create Job
+
+↓
+
+Queue
+
+↓
+
+Worker
+
+↓
+
+Processing
+
+↓
+
+Database Update
+
+↓
+
+Frontend Notification
+
+Example:
+
+User clicks:
+
+Generate Clips
+
+API response:
+
+{
+"jobId":"123",
+"status":"queued"
+}
+
+Worker handles everything.
+
+12. Queue System
+
+Recommended:
+
+BullMQ
+Redis
+
+Purpose:
+
+Manage:
+
+Video jobs
+AI requests
+Rendering jobs
+
+Job examples:
+
+VIDEO_ANALYSIS
+
+TRANSCRIPTION
+
+CLIP_GENERATION
+
+CAPTION_RENDERING
+
+EXPORT
+13. Processing Worker
+
+Worker responsibilities:
+
+Receive job
+Download video
+Process video
+Call AI
+Generate clips
+Upload results
+Update database
+Notify user
+14. Credit Service
+
+Controls usage.
+
+Before processing:
+
+Backend checks:
+
+Does user have enough credits?
+
+If yes:
+
+Reserve credits
+↓
+Process video
+↓
+Finalize charge
+
+If failed:
+
+Refund credits
+15. Credit Calculation Logic
+
+Factors:
+
+Video duration
+Number of clips
+Clip length
+Processing complexity
+
+Example:
+
+30 sec clip
+= 10 credits
+
+60 sec clip
+= 15 credits
+
+90 sec clip
+= 25 credits
+16. Payment Service
+
+Handles:
+
+Subscriptions
+Credit purchases
+Billing events
+
+Provider:
+
+Stripe
+
+Flow:
+
+User subscribes
+
+↓
+
+Stripe payment
+
+↓
+
+Webhook received
+
+↓
+
+Update user plan
+
+↓
+
+Add credits
+17. Notification Service
+
+Notifies users:
+
+Examples:
+
+Email:
+
+Your clips are ready.
+
+In-app:
+
+10 clips generated successfully.
+
+18. Error Handling
+
+Every failed process must:
+
+Record error
+Refund credits if needed
+Inform user
+Allow retry
+
+Example:
+
+Video processing failed.
+
+Credits refunded.
+
+Try again.
+19. Backend Security
+
+Requirements:
+
+Authentication
+
+Every protected route verifies Clerk user.
+
+Authorization
+
+Users can only access:
+
+Their projects
+Their clips
+Their credits
+File Security
+
+Validate:
+
+File type
+File size
+Upload permissions
+API Protection
+
+Implement:
+
+Rate limits
+Request validation
+Error logging
+20. Backend MVP Checklist
+
+✅ Express API
+✅ Clerk authentication
+✅ Supabase integration
+✅ Video upload handling
+✅ AI service integration
+✅ FFmpeg pipeline
+✅ Background jobs
+✅ Credit system
+✅ Stripe integration
+✅ Error handling
+
+PART 7/10 — DATABASE DESIGN
+1. Database Overview
+
+Velora uses:
+
+Database
+
+Supabase PostgreSQL
+
+Purpose:
+
+Store user information
+Manage projects
+Track videos
+Store generated clips
+Handle credits
+Track payments
+Monitor processing jobs
+2. Database Design Principles
+
+The database must be:
+
+✅ Secure
+✅ Scalable
+✅ Easy to query
+✅ Ready for future features
+
+Important rules:
+
+Users only access their own data
+Every project belongs to a user
+Every clip belongs to a project
+Every credit transaction is recorded
+3. Database Relationship Overview
+Users
+
+  |
+  |
+  | 1-to-many
+
+  ↓
+
+Projects
+
+  |
+  |
+  | 1-to-many
+
+  ↓
+
+Clips
+
+
+Users
+
+  |
+  |
+  | 1-to-many
+
+  ↓
+
+Credit Transactions
+
+
+Users
+
+  |
+  |
+  | 1-to-many
+
+  ↓
+
+Subscriptions
+4. Users Table
+Table Name
+
+users
+
+Purpose:
+
+Stores user account information.
+
+Schema
+users
+
+id
+-
+UUID
+Primary Key
+
+
+clerk_id
+-
+Text
+Unique
+
+
+email
+-
+Text
+
+
+full_name
+-
+Text
+
+
+avatar_url
+-
+Text
+
+
+plan
+-
+Enum
+
+free
+creator
+pro
+
+
+credits_balance
+-
+Integer
+
+
+created_at
+-
+Timestamp
+
+
+updated_at
+-
+Timestamp
+Example
+{
+"id":"123",
+"email":"user@email.com",
+"plan":"creator",
+"credits_balance":1200
+}
+5. Projects Table
+Table Name
+
+projects
+
+Purpose:
+
+Represents a user's uploaded video.
+
+One upload = one project.
+
+Schema
+projects
+
+id
+-
+UUID
+Primary Key
+
+
+user_id
+-
+UUID
+Foreign Key
+
+
+title
+-
+Text
+
+
+source_type
+-
+Enum
+
+youtube
+upload
+
+
+source_url
+-
+Text
+
+
+original_video_url
+-
+Text
+
+
+thumbnail_url
+-
+Text
+
+
+duration_seconds
+-
+Integer
+
+
+status
+-
+Enum
+
+created
+uploading
+analyzing
+processing
+completed
+failed
+
+
+created_at
+-
+Timestamp
+
+
+updated_at
+-
+Timestamp
+Example
+{
+"title":"AI Podcast Episode",
+"duration_seconds":7200,
+"status":"completed"
+}
+6. Clips Table
+Table Name
+
+clips
+
+Purpose:
+
+Stores generated short-form videos.
+
+Schema
+clips
+
+id
+-
+UUID
+Primary Key
+
+
+project_id
+-
+UUID
+Foreign Key
+
+
+video_url
+-
+Text
+
+
+thumbnail_url
+-
+Text
+
+
+duration_seconds
+-
+Integer
+
+
+start_time
+-
+Integer
+
+
+end_time
+-
+Integer
+
+
+viral_score
+-
+Integer
+
+
+status
+-
+Enum
+
+processing
+completed
+failed
+
+
+created_at
+-
+Timestamp
+Example
+{
+"duration_seconds":60,
+"viral_score":94,
+"status":"completed"
+}
+7. Clip Metadata Table
+Table Name
+
+clip_metadata
+
+Purpose:
+
+Stores AI-generated content.
+
+Schema
+clip_metadata
+
+id
+-
+UUID
+
+
+clip_id
+-
+UUID
+Foreign Key
+
+
+title
+-
+Text
+
+
+caption
+-
+Text
+
+
+hashtags
+-
+JSON
+
+
+created_at
+-
+Timestamp
+Example
+{
+"title":"The AI Mistake Everyone Makes",
+
+"caption":
+"Most people misunderstand AI...",
+
+"hashtags":
+[
+"#AI",
+"#Podcast"
+]
+}
+8. Transcripts Table
+Table Name
+
+transcripts
+
+Purpose:
+
+Stores AI transcription results.
+
+Schema
+transcripts
+
+id
+-
+UUID
+
+
+project_id
+-
+UUID
+
+
+content
+-
+Text
+
+
+segments
+-
+JSON
+
+
+language
+-
+Text
+
+
+created_at
+-
+Timestamp
+Stores:
+Full transcript
+Timestamp data
+Speaker sections
+
+Example:
+
+{
+"time":"00:15:23",
+"text":"AI will change business"
+}
+9. Credit Transactions Table
+Table Name
+
+credit_transactions
+
+Purpose:
+
+Track every credit movement.
+
+Schema
+credit_transactions
+
+id
+-
+UUID
+
+
+user_id
+-
+UUID
+
+
+amount
+-
+Integer
+
+
+type
+-
+Enum
+
+earned
+spent
+refund
+purchase
+
+
+reason
+-
+Text
+
+
+created_at
+-
+Timestamp
+Example
+{
+"amount":-120,
+"type":"spent",
+"reason":"Generated 10 clips"
+}
+10. Processing Jobs Table
+Table Name
+
+processing_jobs
+
+Purpose:
+
+Track background tasks.
+
+Schema
+processing_jobs
+
+id
+-
+UUID
+
+
+project_id
+-
+UUID
+
+
+job_type
+-
+Enum
+
+analysis
+transcription
+generation
+rendering
+
+
+status
+-
+Enum
+
+queued
+running
+completed
+failed
+
+
+progress
+-
+Integer
+
+
+error_message
+-
+Text
+
+
+created_at
+-
+Timestamp
+Example
+{
+"job_type":"rendering",
+"status":"running",
+"progress":65
+}
+11. Subscriptions Table
+Table Name
+
+subscriptions
+
+Purpose:
+
+Store billing information.
+
+Schema
+subscriptions
+
+id
+-
+UUID
+
+
+user_id
+-
+UUID
+
+
+stripe_customer_id
+-
+Text
+
+
+stripe_subscription_id
+-
+Text
+
+
+plan
+-
+Text
+
+
+status
+-
+Enum
+
+active
+cancelled
+expired
+
+
+renewal_date
+-
+Timestamp
+12. Credit Packages Table
+Table Name
+
+credit_packages
+
+Purpose:
+
+Store available credit purchases.
+
+Schema
+credit_packages
+
+id
+-
+UUID
+
+
+name
+-
+Text
+
+
+credits
+-
+Integer
+
+
+price
+-
+Decimal
+
+
+active
+-
+Boolean
+
+Example:
+
+Starter
+
+500 credits
+
+$5
+13. Payments Table
+Table Name
+
+payments
+
+Purpose:
+
+Track successful payments.
+
+Schema
+payments
+
+id
+-
+UUID
+
+
+user_id
+-
+UUID
+
+
+amount
+-
+Decimal
+
+
+currency
+-
+Text
+
+
+payment_type
+-
+Enum
+
+subscription
+credits
+
+
+stripe_payment_id
+-
+Text
+
+
+status
+-
+Text
+
+
+created_at
+-
+Timestamp
+14. User Settings Table
+Table Name
+
+user_settings
+
+Purpose:
+
+Store preferences.
+
+Schema:
+
+user_settings
+
+id
+
+user_id
+
+default_caption_style
+
+default_platform
+
+email_notifications
+
+created_at
+
+Example:
+
+{
+"default_caption_style":"modern",
+"default_platform":"youtube"
+}
+15. Storage Structure
+
+Supabase Storage:
+
+velora-storage
+
+/users/
+
+   /user_id/
+
+       /projects/
+
+           /project_id/
+
+                original.mp4
+
+                clips/
+
+                    clip1.mp4
+
+                    clip2.mp4
+
+                thumbnails/
+16. Row Level Security (RLS)
+
+Important Supabase feature.
+
+Rules:
+
+Users
+
+Can only read their own profile.
+
+Projects
+
+User can:
+
+✅ Create
+✅ Read
+✅ Update
+✅ Delete
+
+Only their own projects.
+
+Clips
+
+User can access clips belonging to their projects.
+
+Credits
+
+Users can view their own transactions.
+
+17. Future Database Tables
+
+Not MVP:
+
+Teams
+
+For agency accounts.
+
+Referrals
+
+For growth system.
+
+Analytics
+
+For clip performance tracking.
+
+API Keys
+
+For enterprise users.
+
+18. Database MVP Checklist
+
+✅ Users
+✅ Projects
+✅ Clips
+✅ Clip Metadata
+✅ Transcripts
+✅ Credit Transactions
+✅ Processing Jobs
+✅ Subscriptions
+✅ Payments
+✅ User Settings
+
+PART 8/10 — PAYMENTS & BUSINESS MODEL
+1. Business Model Overview
+
+Velora uses a:
+
+Subscription + Credit Model
+
+Reason:
+
+Video AI processing has real costs:
+
+AI processing
+Transcription
+Storage
+Rendering
+Server usage
+
+An unlimited plan would create a risk of heavy users costing more than they pay.
+
+The credit model creates:
+
+✅ Predictable costs
+✅ Fair usage
+✅ Better scaling
+✅ Higher margins
+
+2. Pricing Philosophy
+
+Velora should be positioned as a tool that helps users make money.
+
+The target user:
+
+Creator
+Podcaster
+Clip entrepreneur
+
+They are not buying "AI credits."
+
+They are buying:
+
+More content, faster.
+
+3. Plans
+Free Plan
+
+Purpose:
+
+Allow users to experience Velora.
+
+Price:
+
+$0/month
+
+Features:
+
+✅ Account creation
+✅ 50 free credits
+✅ YouTube import
+✅ Local upload
+✅ AI clip generation
+✅ Viral Score
+✅ AI titles/captions/hashtags
+
+Restrictions:
+
+Watermark included
+Limited processing priority
+Limited storage history
+Creator Plan ⭐
+
+Main plan.
+
+Price:
+
+$10/month
+
+Target:
+
+Most creators.
+
+Includes:
+
+✅ Monthly credits
+✅ No watermark
+✅ Faster processing
+✅ Full clip generation
+✅ Premium caption styles
+✅ Longer project history
+
+Suggested allowance:
+
+Example:
+
+1,200 credits/month
+
+Future Pro Plan
+
+Target:
+
+Power users.
+
+Price:
+
+$30–50/month
+
+Includes:
+
+More credits
+Priority queue
+More storage
+Advanced AI features
+Analytics
+Team features
+4. Credit System
+
+Credits are Velora's usage currency.
+
+Why Credits?
+
+Without credits:
+
+User:
+
+"Generate unlimited 3-hour videos."
+
+Problem:
+
+One user can destroy server costs.
+
+With credits:
+
+User understands:
+
+More processing = more usage.
+
+5. Credit Usage Formula
+
+Credits depend on:
+
+Video Analysis
+
+Longer videos require more processing.
+
+Number of Clips
+
+More clips require:
+
+More rendering
+More AI generation
+Clip Duration
+
+Longer clips cost more.
+
+Example:
+
+30 second clip
+
+≈ 10 credits
+
+
+60 second clip
+
+≈ 15 credits
+
+
+90 second clip
+
+≈ 25 credits
+6. Example User Usage
+
+Creator uploads:
+
+2-hour podcast
+
+Requests:
+
+10 clips
+
+Length:
+
+60 seconds
+
+Calculation:
+
+10 clips × 15 credits
+
+=
+
+150 credits
+
+User with:
+
+1200 credits
+
+Can create approximately:
+
+80 clips/month
+
+(depending on settings)
+
+7. Credit Purchases
+
+Users can buy extra credits.
+
+Starter Pack
+
+Price:
+
+$5
+
+Credits:
+
+500
+
+Creator Pack
+
+Price:
+
+$10
+
+Credits:
+
+1200
+
+Pro Pack
+
+Price:
+
+$20
+
+Credits:
+
+3000
+
+8. Stripe Integration
+
+Payment provider:
+
+Stripe
+
+Handles:
+
+Subscriptions
+One-time purchases
+Payment security
+Invoices
+Renewals
+9. Subscription Flow
+
+Example:
+
+User clicks:
+
+"Upgrade"
+
+↓
+
+Stripe Checkout opens
+
+↓
+
+Payment completed
+
+↓
+
+Stripe webhook sent
+
+↓
+
+Backend verifies payment
+
+↓
+
+User plan updated
+
+↓
+
+Credits added
+
+Flow:
+
+User
+
+↓
+
+Stripe
+
+↓
+
+Webhook
+
+↓
+
+Backend
+
+↓
+
+Database Update
+
+↓
+
+User Gets Access
+10. Stripe Webhooks
+
+Important events:
+
+Subscription Created
+
+Action:
+
+Upgrade account
+Add credits
+Subscription Renewed
+
+Action:
+
+Add monthly credits
+Subscription Cancelled
+
+Action:
+
+Keep account until period ends
+Payment Failed
+
+Action:
+
+Notify user
+Restrict premium features
+11. Credit Transaction Rules
+
+Every credit change is recorded.
+
+Examples:
+
+Signup Bonus
++50 credits
+
+Reason:
+Welcome bonus
+Clip Generation
+-150 credits
+
+Reason:
+Generated 10 clips
+Failed Job
++150 credits
+
+Reason:
+Processing refund
+12. User Billing Dashboard
+
+Users can view:
+
+Current Plan
+
+Example:
+
+Creator Plan
+
+$10/month
+Credit Balance
+
+Example:
+
+850 credits remaining
+Usage History
+
+Example:
+
+Generated 5 clips
+
+-75 credits
+
+July 12
+Actions
+
+Buttons:
+
+Upgrade plan
+Buy credits
+Cancel subscription
+13. Revenue Model
+
+Main revenue:
+
+Monthly subscriptions
+
+Example:
+
+1000 paying users:
+
+1000 × $10
+
+= $10,000 MRR
+
+Additional revenue:
+
+Credit packs
+Pro users
+Agency accounts
+14. Cost Management Strategy
+
+Important for profitability.
+
+Storage Management
+
+Free users:
+
+Short retention
+
+Paid users:
+
+Longer retention
+
+Processing Queue
+
+Premium users:
+
+Higher priority.
+
+AI Usage Optimization
+
+Reduce costs by:
+
+Caching transcripts
+Reusing analysis
+Processing only required sections
+15. Future Business Expansion
+Agency Plan
+
+For:
+
+Marketing agencies
+Social media managers
+
+Features:
+
+Multiple clients
+Shared workspace
+Bulk processing
+Enterprise
+
+For:
+
+Media companies
+Large creators
+
+Features:
+
+Custom limits
+Dedicated support
+API access
+16. Business Metrics
+
+Track:
+
+Revenue
+MRR
+ARR
+Average revenue per user
+User Behavior
+Credits consumed
+Projects created
+Clips downloaded
+SaaS Health
+Conversion rate
+Churn rate
+Customer lifetime value
+17. MVP Business Checklist
+
+✅ Free plan
+✅ Creator subscription
+✅ Credit system
+✅ Stripe checkout
+✅ Payment webhooks
+✅ Billing dashboard
+✅ Credit tracking
+
+PART 9/10 — SECURITY, SCALING & DEPLOYMENT
+1. Overview
+
+Velora processes large user videos, handles payments, stores private content, and uses AI services.
+
+The platform must be built with:
+
+Security
+Reliability
+Scalability
+Cost control
+
+as core priorities.
+
+2. Production Architecture
+
+High-level architecture:
+
+ id="0h8r3k"
+                Users
+                  |
+                  ↓
+              Frontend
+            (React + Vercel)
+
+                  |
+                  ↓
+
+             Backend API
+          (Node.js + Express)
+
+                  |
+        ┌─────────┼─────────┐
+        ↓         ↓         ↓
+
+   Supabase   Queue     AI Services
+   Database   System    Whisper/NVIDIA
+
+        ↓         ↓
+        
+   Storage     Workers
+              (FFmpeg)
+              
+                  ↓
+
+            Generated Clips
+3. Hosting Strategy
+Frontend
+
+Recommended:
+
+Vercel
+
+Handles:
+
+React hosting
+CDN
+Automatic deployments
+HTTPS
+Backend
+
+Options:
+
+MVP
+VPS server
+Docker containers
+
+Examples:
+
+DigitalOcean
+Hetzner
+AWS
+Later
+
+Move to:
+
+Kubernetes
+Cloud Run
+AWS ECS
+
+when traffic grows.
+
+4. Containerization
+
+Use:
+
+Docker
+
+Purpose:
+
+Consistent environment
+Easy deployment
+Easier scaling
+
+Backend container:
+
+ id="7n6d4f"
+Node.js API
+
++
+FFmpeg
+
++
+Dependencies
+
+Worker container:
+
+ id="6khm0q"
+Video Processing Worker
+
++
+FFmpeg
+
++
+AI processing tools
+5. Video Processing Scaling
+
+Video processing is the most expensive part.
+
+Do not process videos directly on the API server.
+
+Architecture:
+
+User
+
+↓
+
+API Server
+
+↓
+
+Create Job
+
+↓
+
+Queue
+
+↓
+
+Worker Server
+
+↓
+
+Process Video
+
+↓
+
+Save Result
+6. Queue System
+
+Recommended:
+
+Redis + BullMQ
+
+Handles:
+
+Video jobs
+AI jobs
+Rendering jobs
+
+Example queue:
+
+ id="6a4d2w"
+Waiting:
+
+Job 1
+Job 2
+Job 3
+
+
+Processing:
+
+Job 4
+
+Benefits:
+
+Prevents server crashes
+Handles many users
+Allows priority processing
+7. Priority Processing
+
+Future feature:
+
+Paid users process faster.
+
+Example:
+
+Free
+
+Normal queue
+
+Creator
+
+Priority queue
+
+Pro
+
+Highest priority
+
+8. Storage Management
+
+Videos are large.
+
+Storage rules:
+
+Original Videos
+
+Store temporarily.
+
+After processing:
+
+Free users:
+
+Delete after 7 days
+
+Creator:
+
+Keep 30 days
+
+Pro:
+
+Long-term storage
+
+Generated Clips
+
+Keep longer because they are the final product.
+
+9. File Security
+
+Uploads must be validated.
+
+Checks:
+
+File Type
+
+Allow:
+
+MP4
+MOV
+MKV
+
+Reject:
+
+Executables
+Unknown formats
+File Size
+
+Limit uploads.
+
+Example:
+
+Maximum:
+
+10GB
+
+(adjust after testing)
+
+Malware Protection
+
+Future:
+
+Scan uploaded files.
+
+10. Authentication Security
+
+Using:
+
+Clerk
+
+Handles:
+
+Password security
+OAuth
+Sessions
+Tokens
+
+Backend must verify:
+
+Every request:
+
+ id="p9q0r1"
+Request
+
+↓
+
+Check Clerk Token
+
+↓
+
+Allow/Deny
+11. Authorization Rules
+
+Users can only access:
+
+Their own:
+
+Projects
+Videos
+Clips
+Credits
+Payments
+
+Example:
+
+User A:
+
+Cannot access User B's project.
+
+Implemented through:
+
+Backend checks
+Supabase Row Level Security
+12. API Security
+
+Required:
+
+Rate Limiting
+
+Prevent abuse.
+
+Examples:
+
+Limit:
+
+Upload requests
+AI generation requests
+API calls
+Input Validation
+
+Check:
+
+URLs
+File information
+User inputs
+Error Handling
+
+Never expose:
+
+Database errors
+API keys
+Internal information
+
+Bad:
+
+Database connection failed at line 52
+
+Good:
+
+Something went wrong. Please try again.
+13. Environment Security
+
+Sensitive keys stored in:
+
+.env
+
+Never expose:
+
+AI API keys
+Stripe keys
+Database credentials
+
+Example:
+
+ id="qf9u5z"
+DATABASE_URL=
+
+STRIPE_SECRET_KEY=
+
+AI_API_KEY=
+
+CLERK_SECRET_KEY=
+14. Monitoring
+
+Track:
+
+System Health
+Server uptime
+CPU usage
+Memory
+Storage
+Application Health
+Failed jobs
+Processing time
+API errors
+Business Health
+Active users
+Credits used
+Revenue
+15. Logging
+
+Need logs for:
+
+Upload failures
+AI failures
+Payment issues
+Processing errors
+
+Example:
+
+ id="g7f5ks"
+Project:
+12345
+
+Status:
+Failed
+
+Reason:
+FFmpeg rendering error
+16. Backup Strategy
+
+Database:
+
+Automatic Supabase backups.
+
+Important data:
+
+Backup:
+
+Users
+Projects
+Payments
+Credits
+
+Files:
+
+Backup strategy depends on storage provider.
+
+17. Disaster Recovery
+
+If something breaks:
+
+System should:
+
+Stop affected jobs
+Preserve user data
+Restore service
+Retry failed tasks
+18. Scaling Plan
+Stage 1 — MVP
+
+Users:
+
+0–1,000
+
+Architecture:
+
+Single backend
+Single worker
+Supabase
+Redis queue
+Stage 2 — Growth
+
+Users:
+
+1,000–50,000
+
+Add:
+
+Multiple workers
+Better queues
+CDN
+More storage
+Stage 3 — Scale
+
+Users:
+
+50,000+
+
+Add:
+
+Kubernetes
+Multiple regions
+Dedicated AI infrastructure
+Advanced monitoring
+19. Deployment Pipeline
+
+Development:
+
+Developer
+
+↓
+
+GitHub
+
+↓
+
+Testing
+
+↓
+
+Production Deploy
+
+Recommended:
+
+CI/CD
+
+Automatically:
+
+Run tests
+Build project
+Deploy updates
+20. Production Checklist
+
+Before launch:
+
+✅ HTTPS
+✅ Authentication security
+✅ Database security
+✅ File validation
+✅ API protection
+✅ Payment security
+✅ Error tracking
+✅ Backups
+✅ Monitoring
+✅ Queue system
+
+PART 10/10 — ROADMAP & FUTURE FEATURES
+1. Product Roadmap Overview
+
+Velora should not try to build everything at once.
+
+The strategy:
+
+Build the simplest version that proves creators will pay, then expand into a complete AI creator platform.
+
+Roadmap:
+
+MVP
+ ↓
+Creator Platform
+ ↓
+AI Content Operating System
+PHASE 0 — Foundation (Before Launch)
+Goal:
+
+Prepare the product for first users.
+
+Tasks:
+
+✅ Brand identity
+✅ Landing page
+✅ Authentication
+✅ Database setup
+✅ Payment setup
+✅ Video upload system
+✅ AI pipeline
+✅ Credit system
+✅ Dashboard
+
+PHASE 1 — MVP Launch
+Timeline:
+
+0–3 months
+
+Goal:
+
+Prove:
+
+"Creators want AI-generated clips."
+
+MVP Features
+User System
+
+✅ Signup/Login
+✅ Profile
+✅ Credits
+
+Video Input
+
+✅ YouTube URLs
+✅ Local uploads
+
+AI Processing
+
+✅ Transcription
+✅ Moment detection
+✅ Clip generation
+✅ Captions
+✅ Titles
+✅ Hashtags
+
+Management
+
+✅ Projects
+✅ Clip preview
+✅ Downloads
+
+Monetization
+
+✅ Free plan
+✅ $10 Creator plan
+✅ Credit purchases
+
+MVP Success Targets
+
+Before expanding:
+
+Aim for:
+
+Users
+
+1,000 registered users
+
+Paying Customers
+
+50–100 subscribers
+
+Important Metric
+
+Users downloading generated clips.
+
+PHASE 2 — Creator Growth Platform
+Timeline:
+
+3–6 months
+
+Goal:
+
+Make Velora better for serious creators.
+
+Features
+1. Better AI Selection
+
+Improve:
+
+Viral prediction
+Hook detection
+Story understanding
+2. Clip Improvements
+
+Add:
+
+Better framing
+Face tracking
+Auto zoom
+Silence removal
+3. More Caption Styles
+
+Add:
+
+Gaming style
+MrBeast-style captions
+Podcast style
+Educational style
+4. Content Calendar
+
+Help creators plan:
+
+Example:
+
+Monday:
+Post Clip 1
+
+Wednesday:
+Post Clip 2
+
+Friday:
+Post Clip 3
+5. Direct Publishing
+
+Connect:
+
+YouTube
+TikTok
+Instagram
+
+Allow:
+
+Generate → Schedule → Publish
+
+PHASE 3 — AI Editing Studio
+Timeline:
+
+6–12 months
+
+Goal:
+
+Compete with traditional editing tools.
+
+Features
+AI Video Editor
+
+User says:
+
+Make this clip more energetic.
+
+AI edits:
+
+Cuts
+Zooms
+Captions
+Music
+Smart B-Roll
+
+AI adds:
+
+Images
+Videos
+Visual references
+AI Voice Features
+
+Future:
+
+Voice enhancement
+Dubbing
+Translation
+PHASE 4 — Agency Platform
+Timeline:
+
+12–18 months
+
+Target:
+
+People managing multiple creators.
+
+Features:
+
+Workspaces
+
+Example:
+
+Agency:
+
+Client A
+
+Client B
+
+Client C
+Team Members
+
+Roles:
+
+Owner
+Editor
+Client
+Bulk Processing
+
+Upload:
+
+20 podcasts
+
+Generate:
+
+200 clips
+
+PHASE 5 — Velora AI Creator OS
+
+Long-term vision.
+
+Velora becomes:
+
+The operating system for content creators.
+
+Features
+1. Content Intelligence
+
+AI understands:
+
+Audience
+Topics
+Performance
+
+Example:
+
+"Your audience likes business clips more than AI clips."
+
+2. Personal AI Content Assistant
+
+A creator can ask:
+
+Give me 20 video ideas based on my channel.
+
+AI responds with:
+
+Ideas
+Scripts
+Hooks
+Titles
+3. Analytics
+
+Track:
+
+Views
+Retention
+Engagement
+4. Multi-platform Optimization
+
+One video:
+
+↓
+
+Velora creates:
+
+TikTok version
+
+YouTube version
+
+Instagram version
+
+LinkedIn version
+
+6. Mobile App Roadmap
+
+Future:
+
+React Native app.
+
+Mobile users can:
+
+Upload videos
+Check processing
+Download clips
+Manage credits
+
+Heavy processing stays on servers.
+
+7. API Platform
+
+Future developer product.
+
+Allow:
+
+Other apps to use Velora AI.
+
+Example:
+
+POST /generate-clips
+
+Customers:
+
+SaaS companies
+Agencies
+Media companies
+8. AI Model Improvements
+
+Long term:
+
+Move from:
+
+External AI APIs
+
+to:
+
+Custom AI systems.
+
+Possible:
+
+Custom clip ranking model
+Creator-specific AI
+Better viral prediction
+9. Growth Strategy
+Phase 1: Creator Communities
+
+Target:
+
+YouTubers
+Podcasters
+TikTok creators
+
+Methods:
+
+Free credits
+Creator partnerships
+Twitter/X building
+YouTube tutorials
+Phase 2: Showcase Results
+
+Marketing content:
+
+Before:
+
+"2 hour podcast"
+
+After:
+
+"20 viral clips"
+
+Phase 3: Referral Program
+
+Users invite creators.
+
+Reward:
+
+Credits
+Discounts
+10. Final Product Vision
+
+Velora starts as:
+
+AI clip generator.
+
+Then becomes:
+
+AI content assistant.
+
+Eventually becomes:
+
+The complete AI operating system for creators.
+
+FINAL PRD COMPLETE ✅🔥
+
+You now have the full blueprint:
+
+Product Vision
+Brand & Design
+UX
+Core Features
+Frontend
+Backend
+Database
+Payments
+Security & Scaling
+Roadmap

@@ -1,0 +1,1 @@
+ALTER TABLE clips ADD COLUMN IF NOT EXISTS subtitles_url TEXT;
