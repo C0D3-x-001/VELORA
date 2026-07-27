@@ -81,7 +81,7 @@ export default function EditorLeftSidebar({ clip, transcript, editState, onUpdat
                   const presetStyle = getCaptionPresetStyle(preset.value);
                   onUpdate({
                     captionPreset: preset.value,
-                    captionStyle: preset.value === "popup" ? "popup" : "modern",
+                    captionStyle: "popup",
                     captionConfig: { ...captionConfig, ...presetStyle },
                   });
                 }}

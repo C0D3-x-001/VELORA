@@ -123,6 +123,7 @@ export default function EditorRightSidebar({ editState, onUpdate, clip, transcri
     const presetStyle = getCaptionPresetStyle(newPreset);
     onUpdate({
       captionPreset: newPreset,
+      captionStyle: "popup",
       captionConfig: { ...config, ...presetStyle },
     });
     setPreviewIdx(0);
