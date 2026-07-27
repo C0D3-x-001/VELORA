@@ -716,8 +716,10 @@ async function processVideoBackground(projectId, project, userId, settings, esti
 
     const cutTasks = clipSchedule.map(({ i, startTime, endTime }) => async () => {
       const clipVideoPath = path.join(path.dirname(videoPath), `clip_${projectId}_${i}.mp4`);
+      let actualStartTime = startTime;
       try {
-        await videoService.cutClip(videoPath, clipVideoPath, startTime, endTime - startTime);
+        const cutResult = await videoService.cutClip(videoPath, clipVideoPath, startTime, endTime - startTime);
+        actualStartTime = cutResult.actualStartTime ?? startTime;
         const clipStats = fs.statSync(clipVideoPath);
         if (clipStats.size < 1024) {
           throw new Error(`Cut produced invalid file (${clipStats.size} bytes)`);
@@ -737,16 +739,16 @@ async function processVideoBackground(projectId, project, userId, settings, esti
               throw new Error(`Vertical conversion produced invalid file (${vStats.size} bytes)`);
             }
             try { fs.unlinkSync(clipVideoPath); } catch {}
-            return { i, clipVideoPath: convertedPath, finalClipPath: convertedPath, startTime, endTime, ok: true };
+            return { i, clipVideoPath: convertedPath, finalClipPath: convertedPath, startTime, endTime, actualStartTime, ok: true };
           }
           throw new Error("Vertical conversion produced no output file");
         } catch (convErr) {
           err(`Vertical conversion failed for clip ${i}: ${convErr.message} — uploading original`);
-          return { i, clipVideoPath, finalClipPath: clipVideoPath, startTime, endTime, ok: true, conversionFailed: true };
+          return { i, clipVideoPath, finalClipPath: clipVideoPath, startTime, endTime, actualStartTime, ok: true, conversionFailed: true };
         }
       }
 
-      return { i, clipVideoPath, finalClipPath: clipVideoPath, startTime, endTime, ok: true };
+      return { i, clipVideoPath, finalClipPath: clipVideoPath, startTime, endTime, actualStartTime, ok: true };
     });
 
     const cutResults = await runWithConcurrency(cutTasks, CONCURRENCY);
@@ -825,9 +827,10 @@ async function processVideoBackground(projectId, project, userId, settings, esti
 
     // Phase 1: Upload all files with concurrency limit
     const uploadTasks = successfulCuts.map((cut) => async () => {
-      const { i, startTime, endTime } = cut;
+      const { i, startTime, endTime, actualStartTime } = cut;
       const finalClipPath = cut.enhancedPath || cut.finalClipPath;
-      const clipSegments = (transcript.segments || []).filter((s) => s.end > startTime && s.start < endTime);
+      const clipStartTime = actualStartTime ?? startTime;
+      const clipSegments = (transcript.segments || []).filter((s) => s.end > clipStartTime && s.start < endTime);
 
       let clipVideoUrl = null;
       let clipThumbnailUrl = null;
@@ -840,14 +843,14 @@ async function processVideoBackground(projectId, project, userId, settings, esti
       let videoToUpload = finalClipPath;
       try {
         if (settings.captionStyle === "popup") {
-          const clipTranscript = sliceTranscript(transcript, startTime, endTime);
+          const clipTranscript = sliceTranscript(transcript, clipStartTime, endTime);
           let captionSegments = clipTranscript.segments;
 
           try {
             const clipEmphasis = {};
             (transcript.segments || []).forEach((fullSeg, fullIdx) => {
-              if (fullSeg.end > startTime && fullSeg.start < endTime && emphasisMap[fullIdx]) {
-                const adjustedIdx = captionSegments.findIndex((a) => Math.abs(a.start - Math.max(0, fullSeg.start - startTime)) < 0.5);
+              if (fullSeg.end > clipStartTime && fullSeg.start < endTime && emphasisMap[fullIdx]) {
+                const adjustedIdx = captionSegments.findIndex((a) => Math.abs(a.start - Math.max(0, fullSeg.start - clipStartTime)) < 0.5);
                 if (adjustedIdx >= 0) clipEmphasis[adjustedIdx] = emphasisMap[fullIdx];
               }
             });
@@ -915,8 +918,8 @@ async function processVideoBackground(projectId, project, userId, settings, esti
           if (videoToUpload === finalClipPath) {
             try {
               const adjustedSegments = clipSegments.map((s) => ({
-                start: Math.max(0, s.start - startTime),
-                end: Math.max(0, s.end - startTime),
+                start: Math.max(0, s.start - clipStartTime),
+                end: Math.max(0, s.end - clipStartTime),
                 text: s.text,
               }));
               const vttPath = path.join(path.dirname(videoPath), `sub_fallback_${projectId}_${i}.vtt`);
@@ -936,8 +939,8 @@ async function processVideoBackground(projectId, project, userId, settings, esti
           }
         } else {
           const adjustedSegments = clipSegments.map((s) => ({
-            start: Math.max(0, s.start - startTime),
-            end: Math.max(0, s.end - startTime),
+            start: Math.max(0, s.start - clipStartTime),
+            end: Math.max(0, s.end - clipStartTime),
             text: s.text,
           }));
           const vttPath = path.join(path.dirname(videoPath), `sub_${projectId}_${i}.vtt`);

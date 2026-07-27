@@ -173,8 +173,9 @@ async function regenerateClipBackground({ clip, project, userId, creditsNeeded, 
     tempFiles.push(clipVideoPath);
 
     log(`Cutting clip...`);
-    await videoService.cutClip(videoPath, clipVideoPath, clip.start_time, clip.duration_seconds);
-    log(`Clip cut complete`);
+    const cutResult = await videoService.cutClip(videoPath, clipVideoPath, clip.start_time, clip.duration_seconds);
+    const actualStartTime = cutResult.actualStartTime ?? clip.start_time;
+    log(`Clip cut complete (drift: ${(actualStartTime - clip.start_time).toFixed(3)}s)`);
 
     const platform = settings.platform || project.settings?.platform;
     let finalClipPath = clipVideoPath;
@@ -220,7 +221,7 @@ async function regenerateClipBackground({ clip, project, userId, creditsNeeded, 
         .single();
 
       clipSegments = (transcript?.segments || []).filter(
-        (s) => s.end > clip.start_time && s.start < clip.end_time
+        (s) => s.end > actualStartTime && s.start < clip.end_time
       );
       log(`Found ${clipSegments.length} transcript segments for this clip`);
     } catch (transErr) {
@@ -234,19 +235,19 @@ async function regenerateClipBackground({ clip, project, userId, creditsNeeded, 
     if (captionStyle === "popup" && clipSegments.length > 0) {
       try {
         const adjustedSegments = clipSegments.map((s) => ({
-          start: Math.max(0, s.start - clip.start_time),
-          end: Math.max(0, s.end - clip.start_time),
+          start: Math.max(0, s.start - actualStartTime),
+          end: Math.max(0, s.end - actualStartTime),
           text: s.text,
           words: (s.words || []).map((w) => ({
             word: w.word,
-            start: Math.max(0, w.start - clip.start_time),
-            end: Math.max(0, w.end - clip.start_time),
+            start: Math.max(0, w.start - actualStartTime),
+            end: Math.max(0, w.end - actualStartTime),
           })),
         }));
 
         let clipEmphasis = {};
         try {
-          const allSegments = clipSegments.map((s) => ({ start: s.start - clip.start_time, end: s.end - clip.start_time, text: s.text }));
+          const allSegments = clipSegments.map((s) => ({ start: s.start - actualStartTime, end: s.end - actualStartTime, text: s.text }));
           clipEmphasis = await aiService.analyzeTranscriptEmphasis(allSegments);
         } catch (emphErr) {
           err(`Emphasis analysis failed: ${emphErr.message}`);
@@ -304,8 +305,8 @@ async function regenerateClipBackground({ clip, project, userId, creditsNeeded, 
     } else if (captionStyle !== "none" && clipSegments.length > 0) {
       try {
         const adjustedSegments = clipSegments.map((s) => ({
-          start: Math.max(0, s.start - clip.start_time),
-          end: Math.max(0, s.end - clip.start_time),
+          start: Math.max(0, s.start - actualStartTime),
+          end: Math.max(0, s.end - actualStartTime),
           text: s.text,
         }));
         const vttPath = path.join(clipDir, `regen_sub_${shortId}.vtt`);

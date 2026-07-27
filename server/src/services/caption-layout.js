@@ -221,22 +221,31 @@ export function computeLayoutForSegment(words, segmentStart, segmentEnd, config 
 
 export function attachTiming(layoutWords, wordTimestamps) {
   if (!wordTimestamps || wordTimestamps.length === 0) return layoutWords;
+
+  if (layoutWords.length === wordTimestamps.length) {
+    return layoutWords.map((w, i) => ({
+      ...w,
+      start: wordTimestamps[i].start,
+      end: wordTimestamps[i].end,
+    }));
+  }
+
   const used = new Set();
-  return layoutWords.map((w) => {
+  const matched = layoutWords.map((w) => {
     const cleanTarget = w.word.toLowerCase().replace(/[^a-z]/g, "");
-    let ts = null;
     for (let i = 0; i < wordTimestamps.length; i++) {
       if (used.has(i)) continue;
       const cleanTs = wordTimestamps[i].word.toLowerCase().replace(/[^a-z]/g, "");
       if (cleanTs === cleanTarget) {
-        ts = wordTimestamps[i];
         used.add(i);
-        break;
+        return { ...w, start: wordTimestamps[i].start, end: wordTimestamps[i].end };
       }
     }
-    if (ts) {
-      return { ...w, start: ts.start, end: ts.end };
-    }
+    return w;
+  });
+
+  return matched.map((w) => {
+    if (w.start != null) return w;
     const idx = w.index;
     if (idx < wordTimestamps.length && !used.has(idx)) {
       used.add(idx);

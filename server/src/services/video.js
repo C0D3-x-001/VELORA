@@ -55,8 +55,49 @@ export const videoService = {
       ),
       outputPath,
     ]);
+
+    let actualStartTime = startTime;
+    if (useCopy) {
+      actualStartTime = await this.probeActualStartTime(outputPath);
+      const drift = Math.abs(actualStartTime - startTime);
+      if (drift > 0.01) {
+        console.log(`[Video] Stream-copy drift: requested ${startTime.toFixed(3)}s → actual ${actualStartTime.toFixed(3)}s (Δ${drift.toFixed(3)}s)`);
+      }
+    }
+
     console.log(`[Video] Cut done in ${((Date.now() - start) / 1000).toFixed(1)}s`);
-    return result;
+    return { ...result, actualStartTime };
+  },
+
+  async probeActualStartTime(inputPath) {
+    return new Promise((resolve) => {
+      const ffprobe = spawn(config.video.ffprobePath || config.video.ffmpegPath?.replace(/ffmpeg/, "ffprobe") || "ffprobe", [
+        "-v", "quiet",
+        "-select_streams", "v:0",
+        "-show_entries", "frame=pkt_pts_time",
+        "-of", "csv=p=0",
+        "-read_intervals", "%+#1",
+        inputPath,
+      ], { stdio: ["ignore", "pipe", "pipe"] });
+
+      let stdout = "";
+      let killed = false;
+      const timer = setTimeout(() => {
+        killed = true;
+        try { ffprobe.kill("SIGKILL"); } catch {}
+        resolve(0);
+      }, 10000);
+
+      ffprobe.stdout.on("data", (d) => { stdout += d.toString(); });
+      ffprobe.on("close", () => {
+        clearTimeout(timer);
+        if (killed) return;
+        const firstLine = stdout.trim().split("\n")[0];
+        const pts = parseFloat(firstLine);
+        resolve(isFinite(pts) && pts >= 0 ? pts : 0);
+      });
+      ffprobe.on("error", () => { clearTimeout(timer); resolve(0); });
+    });
   },
 
   async extractThumbnail(inputPath, outputPath, startTime) {

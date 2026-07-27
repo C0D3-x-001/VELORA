@@ -98,17 +98,38 @@ export async function transcribeAudio(audioPath) {
   const elapsed = ((Date.now() - start) / 1000).toFixed(1);
 
   const segments = (json.transcription || []).map((seg) => {
-    const words = (seg.tokens || [])
-      .filter((t) => t.t_dtw > 0 && !t.text.match(/^\[_|^$/))
-      .map((t) => ({
+    const allTokens = (seg.tokens || []).filter((t) => !t.text.match(/^\[_|^$/));
+    const segStart = seg.offsets.from / 1000;
+    const segEnd = seg.offsets.to / 1000;
+
+    const validTokens = allTokens.filter((t) => t.t_dtw > 0);
+
+    const words = allTokens.map((t) => {
+      if (t.t_dtw > 0) {
+        return {
+          word: t.text.trim(),
+          start: t.offsets.from / 1000,
+          end: t.offsets.to / 1000,
+        };
+      }
+
+      const prevWord = validTokens.filter((v) => v.offsets.from <= t.offsets.from).pop();
+      const nextWord = validTokens.find((v) => v.offsets.from >= t.offsets.from);
+      const fallbackStart = prevWord ? prevWord.offsets.to / 1000 : segStart;
+      const fallbackEnd = nextWord ? nextWord.offsets.from / 1000 : segEnd;
+      const start = fallbackStart < fallbackEnd ? fallbackStart : fallbackEnd;
+      const end = fallbackEnd > start ? fallbackEnd : start + 0.05;
+
+      return {
         word: t.text.trim(),
-        start: t.offsets.from / 1000,
-        end: t.offsets.to / 1000,
-      }));
+        start,
+        end,
+      };
+    }).filter((w) => w.word.length > 0);
 
     return {
-      start: seg.offsets.from / 1000,
-      end: seg.offsets.to / 1000,
+      start: segStart,
+      end: segEnd,
       text: (seg.text || "").trim(),
       words,
     };
