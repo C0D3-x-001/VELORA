@@ -55,20 +55,12 @@ const platforms = [
 ];
 
 const captionStyles = [
-  { value: "modern", label: "Modern", desc: "Clean subtitles with outline" },
-  { value: "karaoke", label: "Karaoke", desc: "Words highlight as spoken" },
-  { value: "minimal", label: "Minimal", desc: "Simple professional captions" },
-  { value: "popup", label: "Pop-Up Captions", desc: "Animated word-by-word pop-ups", pro: true },
-  { value: "none", label: "None", desc: "No captions" },
-];
-
-const captionPresets = [
-  { value: "popup", label: "Pop-Up", desc: "One word at a time, pop-up animation" },
-  { value: "bounce", label: "Bounce", desc: "Words bounce in with energy" },
-  { value: "highlight", label: "Highlight", desc: "Full sentence, current word highlighted" },
-  { value: "karaoke", label: "Karaoke", desc: "Words light up as spoken" },
-  { value: "classic", label: "Classic", desc: "Entire sentence at once" },
-  { value: "minimal", label: "Minimal", desc: "Simple clean subtitles" },
+  { value: "popup", label: "Pop-Up", desc: "One word at a time, pop-up animation", pro: true },
+  { value: "bounce", label: "Bounce", desc: "Words bounce in with energy", pro: true },
+  { value: "highlight", label: "Highlight", desc: "Full sentence, current word highlighted", pro: true },
+  { value: "karaoke", label: "Karaoke", desc: "Words light up as spoken", pro: true },
+  { value: "classic", label: "Classic", desc: "Entire sentence at once", pro: true },
+  { value: "minimal", label: "Minimal", desc: "Simple clean subtitles", pro: true },
 ];
 
 const captionPositions = [
@@ -307,7 +299,7 @@ export default function CreateProjectPage() {
     animIn: 80,
     animOut: 80,
   });
-const [captionsEnabled] = useState(true);
+const [captionsEnabled, setCaptionsEnabled] = useState(true);
 const [stabilization, setStabilization] = useState(true);
 const [faceTracking, setFaceTracking] = useState(true);
 const [autoReframe, setAutoReframe] = useState(true);
@@ -330,8 +322,11 @@ const [autoSpeakerSwitch, setAutoSpeakerSwitch] = useState(true);
   useEffect(() => {
     if (serverSettings) {
       setPlatform(serverSettings.default_platform || "vertical");
-      setCaptionStyle(serverSettings.default_caption_style || "popup");
-      setCaptionPreset(serverSettings.default_caption_preset || "popup");
+      const savedStyle = serverSettings.default_caption_style || "popup";
+      const validPresets = ["popup", "bounce", "highlight", "karaoke", "classic", "minimal"];
+      const mappedPreset = serverSettings.default_caption_preset || (validPresets.includes(savedStyle) ? savedStyle : "popup");
+      setCaptionStyle("popup");
+      setCaptionPreset(mappedPreset);
       setStabilization(serverSettings.default_stabilization ?? true);
       setFaceTracking(serverSettings.default_face_tracking ?? true);
       setAutoReframe(serverSettings.default_auto_reframe ?? true);
@@ -388,7 +383,9 @@ const [autoSpeakerSwitch, setAutoSpeakerSwitch] = useState(true);
       setShowPremiumModal(true);
       return;
     }
-    setCaptionStyle(style);
+    setCaptionStyle("popup");
+    setCaptionPreset(style);
+    if (!captionsEnabled) setCaptionsEnabled(true);
   };
 
   // Smart warnings
@@ -470,7 +467,7 @@ const [autoSpeakerSwitch, setAutoSpeakerSwitch] = useState(true);
       setGenerateStep("Starting AI processing...");
       await generateMutation.mutateAsync({
         projectId,
-        settings: { clipCount: effectiveClipCount, clipDuration: effectiveDuration, platform, captionStyle, captionPreset, captionPosition, captionConfig, captionsEnabled, stabilization, faceTracking, autoReframe, closeUpFraming, closeUpMode, autoPunchIn, autoSpeakerSwitch },
+        settings: { clipCount: effectiveClipCount, clipDuration: effectiveDuration, platform, captionStyle: captionsEnabled ? captionStyle : "none", captionPreset, captionPosition, captionConfig, captionsEnabled, stabilization, faceTracking, autoReframe, closeUpFraming, closeUpMode, autoPunchIn, autoSpeakerSwitch },
       });
 
       navigate(`/dashboard/projects/${projectId}/processing`);
@@ -1065,7 +1062,7 @@ const [autoSpeakerSwitch, setAutoSpeakerSwitch] = useState(true);
                       onClick={() => handleCaptionStyleSelect(cs.value)}
                       className={cn(
                         "p-3 rounded-xl border-2 text-left transition-all duration-150 relative",
-                        captionStyle === cs.value
+                        captionPreset === cs.value && captionStyle === "popup"
                           ? "border-primary bg-primary/5"
                           : isLocked
                             ? "border-border bg-surface opacity-75 hover:border-accent/30 hover:opacity-90"
@@ -1084,9 +1081,7 @@ const [autoSpeakerSwitch, setAutoSpeakerSwitch] = useState(true);
                         {isLocked ? (
                           <Lock className="w-3.5 h-3.5 text-text-muted" />
                         ) : (
-                          <Badge variant={captionStyle === cs.value ? "primary" : "default"} size="sm">
-                            {cs.value === "none" ? "Off" : "On"}
-                          </Badge>
+                          captionPreset === cs.value && captionStyle === "popup" && <Check className="w-3.5 h-3.5 text-primary" />
                         )}
                       </div>
                       <p className="text-[11px] text-text-secondary leading-relaxed">{cs.desc}</p>
@@ -1096,38 +1091,7 @@ const [autoSpeakerSwitch, setAutoSpeakerSwitch] = useState(true);
               </div>
             </div>
 
-            {/* CAPTION PRESETS — shown when popup is selected */}
-            {captionStyle === "popup" && isProOrAbove && (
-              <div className="animate-slide-down">
-                <label className="block text-xs font-medium text-text-secondary mb-2.5">
-                  Caption Preset
-                  <span className="ml-1.5 text-[10px] text-accent font-semibold">PRO</span>
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  {captionPresets.map((cp) => (
-                    <button
-                      key={cp.value}
-                      type="button"
-                      onClick={() => setCaptionPreset(cp.value)}
-                      className={cn(
-                        "p-2.5 rounded-xl border-2 text-left transition-all duration-150",
-                        captionPreset === cp.value
-                          ? "border-primary bg-primary/5"
-                          : "border-border bg-surface hover:border-border"
-                      )}
-                    >
-                      <div className="flex items-center justify-between mb-0.5">
-                        <span className="text-[11px] font-semibold text-text">{cp.label}</span>
-                        {captionPreset === cp.value && <Check className="w-3 h-3 text-primary" />}
-                      </div>
-                      <p className="text-[10px] text-text-muted leading-snug">{cp.desc}</p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* CAPTION CUSTOMIZATION — shown when popup is selected */}
+            {/* CAPTION CUSTOMIZATION — shown when a preset is selected */}
             {captionStyle === "popup" && isProOrAbove && (
               <div className="animate-slide-down space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -1208,6 +1172,34 @@ const [autoSpeakerSwitch, setAutoSpeakerSwitch] = useState(true);
                 </div>
               </div>
             )}
+
+            <div>
+              <label className="block text-xs font-medium text-text-secondary mb-2.5">Captions</label>
+              <button
+                type="button"
+                onClick={() => setCaptionsEnabled(!captionsEnabled)}
+                className={cn(
+                  "w-full p-3 rounded-xl border-2 text-left transition-all duration-150 flex items-center gap-3",
+                  captionsEnabled
+                    ? "border-primary bg-primary/5"
+                    : "border-border bg-surface hover:border-border"
+                )}
+              >
+                <div className={cn(
+                  "w-9 h-5 rounded-full transition-colors duration-200 flex-shrink-0 relative",
+                  captionsEnabled ? "bg-primary" : "bg-surface-overlay"
+                )}>
+                  <div className={cn(
+                    "absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200",
+                    captionsEnabled ? "translate-x-4" : "translate-x-0.5"
+                  )} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-sm font-medium text-text">{captionsEnabled ? "Captions On" : "Captions Off"}</span>
+                  <p className="text-[11px] text-text-secondary leading-relaxed">{captionsEnabled ? "Styled captions will be burned into your clips" : "No captions on generated clips"}</p>
+                </div>
+              </button>
+            </div>
 
             <div>
               <label className="block text-xs font-medium text-text-secondary mb-2.5">Video Enhancements</label>

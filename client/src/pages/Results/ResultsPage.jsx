@@ -17,10 +17,12 @@ import { cn, formatDuration, getViralScoreColor, getErrorMessage } from "../../l
 import CaptionEditor from "../../components/ui/CaptionEditor/CaptionEditor";
 
 const captionStyles = [
-  { value: "modern", label: "Modern", desc: "Clean subtitles with outline" },
-  { value: "karaoke", label: "Karaoke", desc: "Words highlight as spoken" },
-  { value: "minimal", label: "Minimal", desc: "Simple professional captions" },
-  { value: "popup", label: "Pop-Up Captions", desc: "Animated word-by-word pop-ups", pro: true },
+  { value: "popup", label: "Pop-Up", desc: "One word at a time, pop-up animation" },
+  { value: "bounce", label: "Bounce", desc: "Words bounce in with energy" },
+  { value: "highlight", label: "Highlight", desc: "Full sentence, current word highlighted" },
+  { value: "karaoke", label: "Karaoke", desc: "Words light up as spoken" },
+  { value: "classic", label: "Classic", desc: "Entire sentence at once" },
+  { value: "minimal", label: "Minimal", desc: "Simple clean subtitles" },
   { value: "none", label: "None", desc: "No captions" },
 ];
 
@@ -800,47 +802,31 @@ export default function ResultsPage() {
         <Modal isOpen={captionModalOpen} onClose={() => setCaptionModalOpen(false)} title="Caption Style" size="sm">
           <div className="space-y-3">
             <div className="space-y-2">
-              {captionStyles.map((cs) => {
-                const isLocked = cs.pro && !isProOrAbove;
-                return (
+              {captionStyles.map((cs) => (
                   <button
                     key={cs.value}
                     onClick={() => {
-                      if (isLocked) { navigate("/billing"); return; }
                       setActiveCaptionStyle(cs.value);
                     }}
-                    disabled={isLocked}
                     className={cn(
                       "w-full p-3 rounded-xl border-2 text-left transition-all duration-200",
-                      isLocked
-                        ? "border-border opacity-60 cursor-not-allowed"
-                        : cs.value === activeCaptionStyle
-                          ? "border-primary bg-primary/5 shadow-sm shadow-primary/10"
-                          : "border-border hover:border-primary/30 hover:bg-primary/5"
+                      cs.value === activeCaptionStyle
+                        ? "border-primary bg-primary/5 shadow-sm shadow-primary/10"
+                        : "border-border hover:border-primary/30 hover:bg-primary/5"
                     )}
                   >
                     <div className="flex items-center justify-between mb-0.5">
                       <div className="flex items-center gap-1.5">
                         <span className="text-sm font-medium text-text capitalize">{cs.label}</span>
-                        {cs.pro && (
-                          <span className="inline-flex items-center gap-0.5 text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-accent/15 text-accent">
-                            <Crown className="w-2.5 h-2.5" /> PRO
-                          </span>
-                        )}
                       </div>
-                      {isLocked ? (
-                        <Lock className="w-3.5 h-3.5 text-text-muted" />
-                      ) : (
-                        activeCaptionStyle === cs.value && <Check className="w-4 h-4 text-primary" />
-                      )}
+                      {activeCaptionStyle === cs.value && <Check className="w-4 h-4 text-primary" />}
                     </div>
                     <p className="text-[11px] text-text-secondary">{cs.desc}</p>
                   </button>
-                );
-              })}
+                ))}
             </div>
 
-            {activeCaptionStyle === "popup" && isProOrAbove && (
+            {activeCaptionStyle !== "none" && (
               <>
                 <CaptionEditor value={captionConfig} onChange={setCaptionConfig} />
               </>

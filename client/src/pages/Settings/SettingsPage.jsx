@@ -17,24 +17,18 @@ import { cn, getErrorMessage } from "../../lib/utils";
 import CaptionEditor from "../../components/ui/CaptionEditor/CaptionEditor";
 
 const captionStyles = [
-  { value: "modern", label: "Modern", desc: "Clean subtitles with outline" },
-  { value: "karaoke", label: "Karaoke", desc: "Words highlight as spoken" },
-  { value: "minimal", label: "Minimal", desc: "Simple professional captions" },
+  { value: "popup", label: "Pop-Up", desc: "One word at a time, pop-up animation" },
+  { value: "bounce", label: "Bounce", desc: "Words bounce in with energy" },
+  { value: "highlight", label: "Highlight", desc: "Full sentence, current word highlighted" },
+  { value: "karaoke", label: "Karaoke", desc: "Words light up as spoken" },
+  { value: "classic", label: "Classic", desc: "Entire sentence at once" },
+  { value: "minimal", label: "Minimal", desc: "Simple clean subtitles" },
   { value: "none", label: "None", desc: "No captions" },
 ];
 
 const platforms = [
   { value: "vertical", label: "Vertical (9:16)", icon: "📱" },
   { value: "landscape", label: "Landscape (16:9)", icon: "🖥️" },
-];
-
-const captionPresets = [
-  { value: "popup", label: "Pop-Up", desc: "One word at a time, pop-up animation" },
-  { value: "classic", label: "Classic", desc: "Bold text with shadow" },
-  { value: "bounce", label: "Bounce", desc: "Playful bounce animation" },
-  { value: "highlight", label: "Highlight", desc: "Color transitions on emphasis" },
-  { value: "karaoke", label: "Karaoke", desc: "Fill sweep like karaoke" },
-  { value: "minimal", label: "Minimal", desc: "Clean fade in/out" },
 ];
 
 const closeUpModes = [
@@ -166,7 +160,7 @@ export default function SettingsPage() {
   const [deleteInput, setDeleteInput] = useState("");
   const [deleteError, setDeleteError] = useState("");
 
-  const [captionStyle, setCaptionStyle] = useState("modern");
+  const [captionStyle, setCaptionStyle] = useState("popup");
   const [captionPreset, setCaptionPreset] = useState("popup");
   const [captionPosition, setCaptionPosition] = useState("center");
   const [captionConfig, setCaptionConfig] = useState({
@@ -227,8 +221,10 @@ export default function SettingsPage() {
   useEffect(() => {
     if (serverSettings && !initializedRef.current) {
       initializedRef.current = true;
-      setCaptionStyle(serverSettings.default_caption_style || "modern");
-      setCaptionPreset(serverSettings.default_caption_preset || "popup");
+      const savedStyle = serverSettings.default_caption_style || "popup";
+      const validPresets = ["popup", "bounce", "highlight", "karaoke", "classic", "minimal"];
+      setCaptionStyle(validPresets.includes(savedStyle) ? "popup" : savedStyle);
+      setCaptionPreset(validPresets.includes(savedStyle) ? savedStyle : (serverSettings.default_caption_preset || "popup"));
       setCaptionPosition(serverSettings.default_caption_position || "center");
       if (serverSettings.default_caption_config) setCaptionConfig(serverSettings.default_caption_config);
       setDefaultPlatform(serverSettings.default_platform || "vertical");
@@ -523,17 +519,17 @@ export default function SettingsPage() {
                   {captionStyles.map((cs) => (
                     <button
                       key={cs.value}
-                      onClick={() => { setCaptionStyle(cs.value); markDirty(); }}
+                      onClick={() => { setCaptionStyle(cs.value === "none" ? "none" : "popup"); setCaptionPreset(cs.value); markDirty(); }}
                       className={cn(
                         "p-3.5 rounded-xl border-2 text-left transition-all duration-200",
-                        captionStyle === cs.value
+                        captionPreset === cs.value && captionStyle !== "none"
                           ? "border-primary bg-primary/5 shadow-sm shadow-primary/10"
                           : "border-border bg-surface hover:border-border-strong hover:bg-surface-subtle"
                       )}
                     >
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-sm font-medium text-text capitalize">{cs.label}</span>
-                        {captionStyle === cs.value && <Check className="w-4 h-4 text-primary" />}
+                        {captionPreset === cs.value && captionStyle !== "none" && <Check className="w-4 h-4 text-primary" />}
                       </div>
                       <p className="text-[11px] text-text-secondary">{cs.desc}</p>
                     </button>
@@ -557,31 +553,6 @@ export default function SettingsPage() {
                     >
                       <span className="text-2xl block mb-1.5">{p.icon}</span>
                       <span className="text-sm font-medium text-text">{p.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </Card>
-
-              {/* Caption Preset */}
-              <Card className="glass-card p-5">
-                <SectionHeader icon={Sparkles} title="Default Caption Preset" description="Premium animation style for pop-up captions (Pro+)" color="bg-purple-500/10 text-purple-400" />
-                <div className="grid grid-cols-2 gap-2 mt-4">
-                  {captionPresets.map((cp) => (
-                    <button
-                      key={cp.value}
-                      onClick={() => { setCaptionPreset(cp.value); markDirty(); }}
-                      className={cn(
-                        "p-2.5 rounded-xl border-2 text-left transition-all duration-200",
-                        captionPreset === cp.value
-                          ? "border-primary bg-primary/5 shadow-sm shadow-primary/10"
-                          : "border-border bg-surface hover:border-border-strong hover:bg-surface-subtle"
-                      )}
-                    >
-                      <div className="flex items-center justify-between mb-0.5">
-                        <span className="text-[11px] font-semibold text-text">{cp.label}</span>
-                        {captionPreset === cp.value && <Check className="w-3 h-3 text-primary" />}
-                      </div>
-                      <p className="text-[10px] text-text-muted">{cp.desc}</p>
                     </button>
                   ))}
                 </div>
