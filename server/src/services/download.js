@@ -164,7 +164,8 @@ async function getVideoInfo(url) {
 }
 
 const DOWNLOAD_FORMATS = [
-  { format: "bv*[height<=720]+ba/b", label: "720p" },
+  { format: "bv*[height<=720][vcodec^=avc]+ba/b/bv*[height<=720]+ba/b", label: "720p H.264" },
+  { format: "bv*[vcodec^=avc]+ba/b/bv*+ba/b", label: "best H.264" },
   { format: "bv*+ba/b", label: "best available" },
   { format: "b", label: "muxed" },
 ];

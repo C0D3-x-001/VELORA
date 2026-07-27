@@ -12,6 +12,7 @@ const PLAN_CONFIG = {
 };
 
 let _vidstabAvailable = null;
+let _vidstabCheckPromise = null;
 
 function getPlanConfig(plan) {
   return PLAN_CONFIG[plan] || PLAN_CONFIG.free;
@@ -45,17 +46,23 @@ function runFFmpeg(args, timeoutMs = 120000) {
 
 async function checkVidstabAvailable() {
   if (_vidstabAvailable !== null) return _vidstabAvailable;
-  try {
-    const result = await runFFmpeg(["-filters"], 5000);
-    const output = result.stderr || "";
-    _vidstabAvailable = output.includes("vidstabdetect");
-  } catch {
-    _vidstabAvailable = false;
-  }
-  if (!_vidstabAvailable) {
-    console.warn("[Stabilize] vidstab filters not available in this FFmpeg build — stabilization disabled for this session");
-  }
-  return _vidstabAvailable;
+  if (_vidstabCheckPromise) return _vidstabCheckPromise;
+
+  _vidstabCheckPromise = (async () => {
+    try {
+      const result = await runFFmpeg(["-filters"], 5000);
+      const output = result.stderr || "";
+      _vidstabAvailable = output.includes("vidstabdetect");
+    } catch {
+      _vidstabAvailable = false;
+    }
+    if (!_vidstabAvailable) {
+      console.warn("[Stabilize] vidstab filters not available — stabilization will be skipped for this session");
+    }
+    return _vidstabAvailable;
+  })();
+
+  return _vidstabCheckPromise;
 }
 
 export async function stabilizeClip(inputPath, outputPath, plan = "free") {
