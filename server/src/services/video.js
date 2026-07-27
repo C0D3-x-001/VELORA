@@ -43,18 +43,23 @@ export const videoService = {
     const useCopy = codec === "h264";
     if (useCopy) console.log(`[Video] Source is H.264 — using stream copy (fast)`);
 
-    const result = await this.runFFmpeg([
-      "-ss", startTime.toString(),
-      "-i", inputPath,
-      "-t", duration.toString(),
-      ...(useCopy
-        ? ["-c", "copy", "-movflags", "+faststart"]
-        : [      "-c:v", "libx264",
-      "-preset", "fast",
-      "-crf", "18", "-pix_fmt", "yuv420p", "-c:a", "aac", "-movflags", "+faststart"]
-      ),
-      outputPath,
-    ]);
+    const result = useCopy
+      ? await this.runFFmpeg([
+          "-i", inputPath,
+          "-ss", startTime.toString(),
+          "-t", duration.toString(),
+          "-c", "copy", "-movflags", "+faststart",
+          outputPath,
+        ])
+      : await this.runFFmpeg([
+          "-ss", startTime.toString(),
+          "-i", inputPath,
+          "-t", duration.toString(),
+          "-c:v", "libx264",
+          "-preset", "fast",
+          "-crf", "18", "-pix_fmt", "yuv420p", "-c:a", "aac", "-movflags", "+faststart",
+          outputPath,
+        ]);
 
     let actualStartTime = startTime;
     if (useCopy) {

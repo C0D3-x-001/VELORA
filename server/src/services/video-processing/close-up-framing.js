@@ -398,7 +398,7 @@ function buildSmoothCropFilter(trajectory, punchInMoments, srcW, srcH) {
     return `crop=${p.cropW}:${p.cropH}:${p.cropX}:${p.cropY}`;
   }
 
-  const MAX_KEYFRAMES = 10;
+  const MAX_KEYFRAMES = 5;
   const keyframes = [];
   const step = Math.max(1, Math.floor(trajectory.length / MAX_KEYFRAMES));
   for (let i = 0; i < trajectory.length; i += step) {

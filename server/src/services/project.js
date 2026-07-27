@@ -730,6 +730,10 @@ async function processVideoBackground(projectId, project, userId, settings, esti
       }
 
       if (needsVertical) {
+        if (settings.closeUpFraming) {
+          console.log(`[Pipeline] Clip ${i}: skipping vertical conversion — close-up framing will output 1080×1920`);
+          return { i, clipVideoPath, finalClipPath: clipVideoPath, startTime, endTime, actualStartTime, ok: true };
+        }
         try {
           const convertedPath = path.join(path.dirname(videoPath), `clip_v_${projectId}_${i}.mp4`);
           await videoService.convertToVertical(clipVideoPath, convertedPath);
@@ -806,7 +810,7 @@ async function processVideoBackground(projectId, project, userId, settings, esti
         }
       });
 
-      await runWithConcurrency(enhanceTasks, 2);
+      await runWithConcurrency(enhanceTasks, 3);
       log(`Enhancements done in ${((Date.now() - enhanceStart) / 1000).toFixed(1)}s`);
     }
 
