@@ -121,6 +121,9 @@ export const videoService = {
     const srcH = dims.height || 1080;
     const srcAspect = srcW / srcH;
     const targetAspect = 9 / 16;
+    if (!srcW || !srcH || srcW < 100 || srcH < 100) {
+      throw new Error(`Invalid source dimensions: ${srcW}x${srcH} — cannot convert to 9:16`);
+    }
     console.log(`[Video] Converting to vertical: ${srcW}x${srcH} (aspect ${srcAspect.toFixed(3)}) → 1080x1920 (target ${targetAspect.toFixed(3)})`);
 
     let vf;

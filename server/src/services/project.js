@@ -2,6 +2,7 @@ import { supabaseAdmin, isConfigured } from "../config/supabase.js";
 import { calculateCredits, getBalance, reserveCredits, refundCredits } from "./credit.js";
 import { downloadService } from "./download.js";
 import { videoService } from "./video.js";
+import { generatePremiumCaptionFile } from "./premium-captions.js";
 import { aiService } from "./ai.js";
 import { refineAllClipBoundaries, findResolvingEndPoint, flattenWords } from "./clip-boundary.js";
 import { deleteProjectFiles } from "./storage.js";
@@ -827,6 +828,35 @@ async function processVideoBackground(projectId, project, userId, settings, esti
       }
 
       let videoToUpload = finalClipPath;
+
+      const captionPreset = settings.captionPreset || "classic";
+      if (captionPreset !== "none" && captionPreset !== "classic" && captionPreset !== "minimal" && clipSegments.length > 0) {
+        try {
+          const adjustedSegments = clipSegments.map((s) => ({
+            start: Math.max(0, s.start - clipStartTime),
+            end: Math.max(0, s.end - clipStartTime),
+            text: s.text,
+            words: s.words,
+          }));
+          const assPath = path.join(path.dirname(videoPath), `sub_${projectId}_${i}.ass`);
+          await generatePremiumCaptionFile(adjustedSegments, {}, assPath, captionPreset, 1080, 1920);
+          if (fs.existsSync(assPath)) {
+            const burnedPath = path.join(path.dirname(videoPath), `clip_burned_${projectId}_${i}.mp4`);
+            await videoService.burnAssCaptions(videoToUpload, burnedPath, assPath);
+            if (fs.existsSync(burnedPath)) {
+              if (videoToUpload !== finalClipPath) {
+                try { fs.unlinkSync(videoToUpload); } catch {}
+              }
+              videoToUpload = burnedPath;
+              log(`ASS captions burned into clip ${i}`);
+            }
+            try { fs.unlinkSync(assPath); } catch {}
+          }
+        } catch (assErr) {
+          warn(`ASS burn failed for clip ${i}: ${assErr.message} — using original`);
+        }
+      }
+
       try {
         const clipBuffer = await fs.promises.readFile(videoToUpload);
         const clipFileName = `clip_${projectId}_${i}.mp4`;

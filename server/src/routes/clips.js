@@ -5,6 +5,7 @@ import { supabaseAdmin, isConfigured } from "../config/supabase.js";
 import { getProject } from "../services/project.js";
 import { calculateCredits, getBalance, reserveCredits, refundCredits } from "../services/credit.js";
 import { videoService } from "../services/video.js";
+import { generatePremiumCaptionFile } from "../services/premium-captions.js";
 import { aiService } from "../services/ai.js";
 import { downloadService } from "../services/download.js";
 import { uploadFile, getSignedUrl, refreshSignedUrl } from "../services/storage.js";
@@ -216,8 +217,37 @@ async function regenerateClipBackground({ clip, project, userId, creditsNeeded, 
     }
 
     const captionStyle = settings.captionStyle || clip.caption_style || "modern";
+    const captionPreset = settings.captionPreset || clip.caption_preset || "classic";
     let clipSubtitlesUrl = clip.subtitles_url;
     let videoToUpload = finalClipPath;
+
+    if (captionPreset !== "none" && captionPreset !== "classic" && captionPreset !== "minimal" && clipSegments.length > 0) {
+      try {
+        const adjustedSegments = clipSegments.map((s) => ({
+          start: Math.max(0, s.start - actualStartTime),
+          end: Math.max(0, s.end - actualStartTime),
+          text: s.text,
+          words: s.words,
+        }));
+        const assPath = path.join(clipDir, `regen_sub_${shortId}.ass`);
+        tempFiles.push(assPath);
+        await generatePremiumCaptionFile(adjustedSegments, {}, assPath, captionPreset, 1080, 1920);
+        if (fs.existsSync(assPath)) {
+          const burnedPath = path.join(clipDir, `regen_burned_${shortId}.mp4`);
+          tempFiles.push(burnedPath);
+          await videoService.burnAssCaptions(videoToUpload, burnedPath, assPath);
+          if (fs.existsSync(burnedPath)) {
+            if (videoToUpload !== finalClipPath) {
+              try { fs.unlinkSync(videoToUpload); } catch {}
+            }
+            videoToUpload = burnedPath;
+            log(`ASS captions burned into clip`);
+          }
+        }
+      } catch (assErr) {
+        err(`ASS burn failed: ${assErr.message} — using original`);
+      }
+    }
 
     if (captionStyle !== "none" && clipSegments.length > 0) {
       try {
@@ -281,6 +311,8 @@ async function regenerateClipBackground({ clip, project, userId, creditsNeeded, 
       thumbnail_url: clipThumbnailUrl,
       subtitles_url: clipSubtitlesUrl,
       caption_style: captionStyle,
+      caption_preset: captionPreset,
+      caption_config: settings.captionConfig || null,
       status: "completed",
     }).eq("id", clipId);
 
