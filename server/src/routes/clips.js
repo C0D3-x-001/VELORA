@@ -61,12 +61,6 @@ router.post("/:clipId/regenerate", async (req, res) => {
       return res.status(402).json({ error: `Insufficient credits. Need ${creditsNeeded}, have ${balance.balance}` });
     }
 
-    const POPUP_CAPTION_TIERS = ["pro", "business"];
-    const requestedStyle = settings?.captionStyle || clip.caption_style || "modern";
-    if (requestedStyle === "popup" && !POPUP_CAPTION_TIERS.includes(balance.plan)) {
-      return res.status(403).json({ error: "Pop-Up Captions require a Pro or Business subscription. Please upgrade your plan." });
-    }
-
     await reserveCredits(req.auth.userId, creditsNeeded, "Regenerating clip", projectId);
 
     regenerateClipBackground({
@@ -108,13 +102,6 @@ router.post("/:clipId/caption-style", async (req, res) => {
       .single();
     if (!project) return res.status(403).json({ error: "Not authorized" });
 
-    const POPUP_CAPTION_TIERS = ["pro", "business"];
-    if (style === "popup") {
-      const balance = await getBalance(req.auth.userId);
-      if (!POPUP_CAPTION_TIERS.includes(balance.plan)) {
-        return res.status(403).json({ error: "Pop-Up Captions require a Pro or Business subscription." });
-      }
-    }
     const updateData = { caption_style: style };
     if (preset) updateData.caption_preset = preset;
     if (position) updateData.caption_position = position;
@@ -232,77 +219,7 @@ async function regenerateClipBackground({ clip, project, userId, creditsNeeded, 
     let clipSubtitlesUrl = clip.subtitles_url;
     let videoToUpload = finalClipPath;
 
-    if (captionStyle === "popup" && clipSegments.length > 0) {
-      try {
-        const adjustedSegments = clipSegments.map((s) => ({
-          start: Math.max(0, s.start - actualStartTime),
-          end: Math.max(0, s.end - actualStartTime),
-          text: s.text,
-          words: (s.words || []).map((w) => ({
-            word: w.word,
-            start: Math.max(0, w.start - actualStartTime),
-            end: Math.max(0, w.end - actualStartTime),
-          })),
-        }));
-
-        let clipEmphasis = {};
-        try {
-          const allSegments = clipSegments.map((s) => ({ start: s.start - actualStartTime, end: s.end - actualStartTime, text: s.text }));
-          clipEmphasis = await aiService.analyzeTranscriptEmphasis(allSegments);
-        } catch (emphErr) {
-          err(`Emphasis analysis failed: ${emphErr.message}`);
-        }
-
-        const assPath = path.join(clipDir, `regen_popup_${shortId}.ass`);
-        tempFiles.push(assPath);
-        const captionWidth = isVertical ? 1080 : videoDims.width;
-        const captionHeight = isVertical ? 1920 : videoDims.height;
-        const captionPreset = settings.captionPreset || clip.caption_preset || "popup";
-        const captionOpts = {};
-        if (settings.captionPosition || clip.caption_position) captionOpts.positionOverride = settings.captionPosition || clip.caption_position;
-        const clipCaptionConfig = settings.captionConfig || clip.caption_config || null;
-        if (clipCaptionConfig) captionOpts.captionConfig = clipCaptionConfig;
-        await videoService.generatePremiumCaptionFile(adjustedSegments, clipEmphasis, assPath, captionPreset, captionWidth, captionHeight, captionOpts);
-
-        if (fs.existsSync(assPath)) {
-          const assContent = fs.readFileSync(assPath, "utf-8");
-          if (!assContent.includes("Dialogue:")) {
-            log(`ASS file has no dialogue lines — skipping burn`);
-            try { fs.unlinkSync(assPath); } catch {}
-          } else {
-            const burnedPath = path.join(clipDir, `regen_burned_${shortId}.mp4`);
-            tempFiles.push(burnedPath);
-            const burnResult = await videoService.addPopupCaptions(finalClipPath, burnedPath, assPath);
-            if (burnResult?.fallback) {
-              log(`Pop-up captions fell back to raw clip — FFmpeg ASS filter may have failed`);
-            } else if (fs.existsSync(burnedPath)) {
-              videoToUpload = burnedPath;
-              log(`Pop-up captions burned into clip`);
-            }
-          }
-        }
-        clipSubtitlesUrl = null;
-        if (videoToUpload === finalClipPath) {
-          try {
-            const vttPath = path.join(clipDir, `regen_sub_fallback_${shortId}.vtt`);
-            tempFiles.push(vttPath);
-            await videoService.generateCaptionFile(adjustedSegments, vttPath);
-            if (fs.existsSync(vttPath)) {
-              const vttBuffer = await fs.promises.readFile(vttPath);
-              const vttFileName = `sub_${clipId}.vtt`;
-              const vttStoragePath = `users/${userId}/projects/${projectId}/subtitles/${vttFileName}`;
-              await uploadFile("velora-storage", vttStoragePath, vttBuffer, "text/vtt");
-              clipSubtitlesUrl = `/api/v1/clips/subtitles/${userId}/${projectId}/${vttFileName}`;
-              log(`Popup VTT fallback generated (ASS burn was skipped)`);
-            }
-          } catch (vttErr) {
-            log(`Popup VTT fallback failed: ${vttErr.message}`);
-          }
-        }
-      } catch (popupErr) {
-        err(`Pop-up caption rendering failed: ${popupErr.message}`);
-      }
-    } else if (captionStyle !== "none" && clipSegments.length > 0) {
+    if (captionStyle !== "none" && clipSegments.length > 0) {
       try {
         const adjustedSegments = clipSegments.map((s) => ({
           start: Math.max(0, s.start - actualStartTime),

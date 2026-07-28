@@ -42,7 +42,7 @@ export async function editClip(projectId, clipId, userId, settings = {}) {
       const instructions = await getEditingInstructions(analysis, {
         duration: clip.duration_seconds,
         platform: settings.platform || "tiktok",
-        captionStyle: settings.captionStyle || "popup",
+        captionStyle: settings.captionStyle || "classic",
       });
 
       job.status = "rendering";

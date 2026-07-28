@@ -17,7 +17,6 @@ import { cn, formatDuration, getViralScoreColor, getErrorMessage } from "../../l
 import CaptionEditor from "../../components/ui/CaptionEditor/CaptionEditor";
 
 const captionStyles = [
-  { value: "popup", label: "Pop-Up", desc: "One word at a time, pop-up animation" },
   { value: "bounce", label: "Bounce", desc: "Words bounce in with energy" },
   { value: "highlight", label: "Highlight", desc: "Full sentence, current word highlighted" },
   { value: "karaoke", label: "Karaoke", desc: "Words light up as spoken" },

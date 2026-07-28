@@ -55,7 +55,6 @@ const platforms = [
 ];
 
 const captionStyles = [
-  { value: "popup", label: "Pop-Up", desc: "One word at a time, pop-up animation", pro: true },
   { value: "bounce", label: "Bounce", desc: "Words bounce in with energy", pro: true },
   { value: "highlight", label: "Highlight", desc: "Full sentence, current word highlighted", pro: true },
   { value: "karaoke", label: "Karaoke", desc: "Words light up as spoken", pro: true },
@@ -282,8 +281,8 @@ export default function CreateProjectPage() {
   const [customClipDuration, setCustomClipDuration] = useState("");
   const [showCustomClipDuration, setShowCustomClipDuration] = useState(false);
   const [platform, setPlatform] = useState("vertical");
-  const [captionStyle, setCaptionStyle] = useState("popup");
-  const [captionPreset, setCaptionPreset] = useState("popup");
+  const [captionStyle, setCaptionStyle] = useState("classic");
+  const [captionPreset, setCaptionPreset] = useState("classic");
   const [captionPosition, setCaptionPosition] = useState("center");
   const [captionConfig, setCaptionConfig] = useState({
     verticalPct: 50,
@@ -322,10 +321,10 @@ const [autoSpeakerSwitch, setAutoSpeakerSwitch] = useState(true);
   useEffect(() => {
     if (serverSettings) {
       setPlatform(serverSettings.default_platform || "vertical");
-      const savedStyle = serverSettings.default_caption_style || "popup";
-      const validPresets = ["popup", "bounce", "highlight", "karaoke", "classic", "minimal"];
-      const mappedPreset = serverSettings.default_caption_preset || (validPresets.includes(savedStyle) ? savedStyle : "popup");
-      setCaptionStyle("popup");
+      const savedStyle = serverSettings.default_caption_style || "classic";
+      const validPresets = ["bounce", "highlight", "karaoke", "classic", "minimal"];
+      const mappedPreset = serverSettings.default_caption_preset || (validPresets.includes(savedStyle) ? savedStyle : "classic");
+      setCaptionStyle("classic");
       setCaptionPreset(mappedPreset);
       setStabilization(serverSettings.default_stabilization ?? true);
       setFaceTracking(serverSettings.default_face_tracking ?? true);
@@ -383,7 +382,7 @@ const [autoSpeakerSwitch, setAutoSpeakerSwitch] = useState(true);
       setShowPremiumModal(true);
       return;
     }
-    setCaptionStyle("popup");
+    setCaptionStyle("classic");
     setCaptionPreset(style);
     if (!captionsEnabled) setCaptionsEnabled(true);
   };
@@ -1062,7 +1061,7 @@ const [autoSpeakerSwitch, setAutoSpeakerSwitch] = useState(true);
                       onClick={() => handleCaptionStyleSelect(cs.value)}
                       className={cn(
                         "p-3 rounded-xl border-2 text-left transition-all duration-150 relative",
-                        captionPreset === cs.value && captionStyle === "popup"
+                        captionPreset === cs.value && captionStyle === "classic"
                           ? "border-primary bg-primary/5"
                           : isLocked
                             ? "border-border bg-surface opacity-75 hover:border-accent/30 hover:opacity-90"
@@ -1081,7 +1080,7 @@ const [autoSpeakerSwitch, setAutoSpeakerSwitch] = useState(true);
                         {isLocked ? (
                           <Lock className="w-3.5 h-3.5 text-text-muted" />
                         ) : (
-                          captionPreset === cs.value && captionStyle === "popup" && <Check className="w-3.5 h-3.5 text-primary" />
+                          captionPreset === cs.value && captionStyle === "classic" && <Check className="w-3.5 h-3.5 text-primary" />
                         )}
                       </div>
                       <p className="text-[11px] text-text-secondary leading-relaxed">{cs.desc}</p>
@@ -1090,88 +1089,6 @@ const [autoSpeakerSwitch, setAutoSpeakerSwitch] = useState(true);
                 })}
               </div>
             </div>
-
-            {/* CAPTION CUSTOMIZATION — shown when a preset is selected */}
-            {captionStyle === "popup" && isProOrAbove && (
-              <div className="animate-slide-down space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                  <div className="rounded-xl bg-surface/80 backdrop-blur-glass border border-border/30 p-5 shadow-card hover:shadow-card-hover transition-all duration-300">
-                    <h4 className="text-xs font-semibold text-text-secondary uppercase tracking-wider mb-4">Caption Position</h4>
-                    <div className="grid grid-cols-2 gap-2">
-                      {[
-                        { label: "Upper", pct: 75 },
-                        { label: "Center", pct: 50 },
-                        { label: "Center Low", pct: 35 },
-                        { label: "Lower", pct: 20 },
-                      ].map((opt, idx) => (
-                        <button
-                          key={opt.label}
-                          type="button"
-                          onClick={() => setCaptionConfig(prev => ({ ...prev, verticalPct: opt.pct }))}
-                          className={cn(
-                            "relative py-3 px-2 rounded-lg text-xs font-medium transition-all duration-200",
-                            Math.abs(captionConfig.verticalPct - opt.pct) < 5
-                              ? "bg-primary/20 text-primary border border-primary/40"
-                              : "bg-surface-subtle text-text-secondary border border-border hover:bg-surface-overlay hover:border-border-strong"
-                          )}
-                        >
-                          {opt.label}
-                        </button>
-                      ))}
-                    </div>
-                    <Slider
-                      value={captionConfig.verticalPct}
-                      onChange={(v) => setCaptionConfig(prev => ({ ...prev, verticalPct: v }))}
-                      min={10}
-                      max={90}
-                      step={1}
-                      label="Custom Y Position"
-                      unit="%"
-                      className="mt-5"
-                    />
-                  </div>
-
-                  <div className="rounded-xl bg-surface/80 backdrop-blur-glass border border-border/30 p-5 shadow-card hover:shadow-card-hover transition-all duration-300">
-                    <h4 className="text-xs font-semibold text-text-secondary uppercase tracking-wider mb-4">Animation Speed</h4>
-                    <div className="space-y-4">
-                      <Slider
-                        value={captionConfig.animIn}
-                        onChange={(v) => setCaptionConfig(prev => ({ ...prev, animIn: v }))}
-                        min={20}
-                        max={400}
-                        step={10}
-                        label="Pop-In Speed"
-                        unit="ms"
-                      />
-                      <Slider
-                        value={captionConfig.animOut}
-                        onChange={(v) => setCaptionConfig(prev => ({ ...prev, animOut: v }))}
-                        min={20}
-                        max={400}
-                        step={10}
-                        label="Pop-Out Speed"
-                        unit="ms"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="rounded-xl bg-gradient-to-br from-primary/5 to-transparent border border-primary/20 backdrop-blur-glass p-6 shadow-card glass-card-hover transition-all duration-300">
-                  <h4 className="text-xs font-semibold text-primary uppercase tracking-wider mb-4">Pro Features Preview</h4>
-                  <div className="text-xs text-text-secondary space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-primary/50" /> <span>Custom positioning for 9:16 vertical videos</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-primary/50" /> <span>Precise timing for word-by-word pop-ups</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-primary/50" /> <span>Smooth animations synchronized to speech</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
 
             <div>
               <label className="block text-xs font-medium text-text-secondary mb-2.5">Captions</label>

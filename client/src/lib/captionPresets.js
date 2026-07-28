@@ -1,23 +1,4 @@
 const PRESET_STYLES = {
-  popup: {
-    fontName: "Poppins",
-    fontWeight: 800,
-    outlineWidth: 5,
-    outlineColor: "#000000",
-    shadowDepth: 6,
-    shadowColor: "rgba(0,0,0,0.5)",
-    textColor: "#FFFFFF",
-    highlightColor: "#00D4FF",
-    highlightScale: 1.2,
-    highlightGlow: true,
-    highlightGlowColor: "#00D4FF",
-    highlightGlowIntensity: 8,
-    highlightBg: null,
-    highlightRadius: 0,
-    animIn: 120,
-    animOut: 80,
-    animType: "pop",
-  },
   tiktok: {
     fontName: "Impact",
     fontWeight: 900,
@@ -135,7 +116,6 @@ const PRESET_STYLES = {
 };
 
 const PRESET_LIST = [
-  { value: "popup", label: "Pop-Up", icon: "B" },
   { value: "tiktok", label: "TikTok", icon: "T" },
   { value: "bounce", label: "Bounce", icon: "Bn" },
   { value: "highlight", label: "Highlight", icon: "H" },
@@ -145,7 +125,7 @@ const PRESET_LIST = [
 ];
 
 export function getCaptionPresetStyle(preset, userConfig) {
-  const presetStyle = PRESET_STYLES[preset] || PRESET_STYLES.popup;
+  const presetStyle = PRESET_STYLES[preset] || PRESET_STYLES.classic;
   const merged = { ...presetStyle };
 
   if (userConfig) {

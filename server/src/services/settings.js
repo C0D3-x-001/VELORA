@@ -2,7 +2,7 @@ import { supabaseAdmin, isConfigured } from "../config/supabase.js";
 
 const DEFAULT_SETTINGS = {
   default_caption_style: "modern",
-  default_caption_preset: "popup",
+  default_caption_preset: "classic",
   default_caption_position: "center",
   default_caption_config: null,
   default_platform: "vertical",
@@ -31,7 +31,7 @@ export async function getSettings(userId) {
   if (error || !data) return DEFAULT_SETTINGS;
   return {
     default_caption_style: data.default_caption_style,
-    default_caption_preset: data.default_caption_preset || "popup",
+    default_caption_preset: data.default_caption_preset || "classic",
     default_caption_position: data.default_caption_position || "center",
     default_caption_config: data.default_caption_config || null,
     default_platform: data.default_platform,
@@ -49,17 +49,17 @@ export async function getSettings(userId) {
   };
 }
 
-const VALID_CAPTION_STYLES = ["modern", "karaoke", "minimal", "popup", "none"];
+const VALID_CAPTION_STYLES = ["modern", "karaoke", "minimal", "none"];
 const VALID_PLATFORMS = ["tiktok", "youtube", "reels", "vertical", "landscape"];
 const VALID_THEMES = ["dark", "light", "system"];
 const VALID_CLOSE_UP_MODES = ["closeup", "medium", "wide"];
-const VALID_CAPTION_PRESETS = ["classic", "popup", "bounce", "highlight", "karaoke", "minimal"];
+const VALID_CAPTION_PRESETS = ["classic", "bounce", "highlight", "karaoke", "minimal"];
 
 export async function updateSettings(userId, settings) {
   const payload = {
     user_id: userId,
     default_caption_style: VALID_CAPTION_STYLES.includes(settings.default_caption_style) ? settings.default_caption_style : "modern",
-    default_caption_preset: VALID_CAPTION_PRESETS.includes(settings.default_caption_preset) ? settings.default_caption_preset : "popup",
+    default_caption_preset: VALID_CAPTION_PRESETS.includes(settings.default_caption_preset) ? settings.default_caption_preset : "classic",
     default_caption_position: settings.default_caption_position || "center",
     default_caption_config: settings.default_caption_config || null,
     default_platform: VALID_PLATFORMS.includes(settings.default_platform) ? settings.default_platform : "vertical",

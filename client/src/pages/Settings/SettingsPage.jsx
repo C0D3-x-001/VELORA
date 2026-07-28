@@ -17,7 +17,6 @@ import { cn, getErrorMessage } from "../../lib/utils";
 import CaptionEditor from "../../components/ui/CaptionEditor/CaptionEditor";
 
 const captionStyles = [
-  { value: "popup", label: "Pop-Up", desc: "One word at a time, pop-up animation" },
   { value: "bounce", label: "Bounce", desc: "Words bounce in with energy" },
   { value: "highlight", label: "Highlight", desc: "Full sentence, current word highlighted" },
   { value: "karaoke", label: "Karaoke", desc: "Words light up as spoken" },
@@ -160,8 +159,8 @@ export default function SettingsPage() {
   const [deleteInput, setDeleteInput] = useState("");
   const [deleteError, setDeleteError] = useState("");
 
-  const [captionStyle, setCaptionStyle] = useState("popup");
-  const [captionPreset, setCaptionPreset] = useState("popup");
+  const [captionStyle, setCaptionStyle] = useState("classic");
+  const [captionPreset, setCaptionPreset] = useState("classic");
   const [captionPosition, setCaptionPosition] = useState("center");
   const [captionConfig, setCaptionConfig] = useState({
     verticalPct: 50,
@@ -221,10 +220,10 @@ export default function SettingsPage() {
   useEffect(() => {
     if (serverSettings && !initializedRef.current) {
       initializedRef.current = true;
-      const savedStyle = serverSettings.default_caption_style || "popup";
-      const validPresets = ["popup", "bounce", "highlight", "karaoke", "classic", "minimal"];
-      setCaptionStyle(validPresets.includes(savedStyle) ? "popup" : savedStyle);
-      setCaptionPreset(validPresets.includes(savedStyle) ? savedStyle : (serverSettings.default_caption_preset || "popup"));
+      const savedStyle = serverSettings.default_caption_style || "classic";
+      const validPresets = ["bounce", "highlight", "karaoke", "classic", "minimal"];
+      setCaptionStyle(validPresets.includes(savedStyle) ? "classic" : savedStyle);
+      setCaptionPreset(validPresets.includes(savedStyle) ? savedStyle : (serverSettings.default_caption_preset || "classic"));
       setCaptionPosition(serverSettings.default_caption_position || "center");
       if (serverSettings.default_caption_config) setCaptionConfig(serverSettings.default_caption_config);
       setDefaultPlatform(serverSettings.default_platform || "vertical");
@@ -519,7 +518,7 @@ export default function SettingsPage() {
                   {captionStyles.map((cs) => (
                     <button
                       key={cs.value}
-                      onClick={() => { setCaptionStyle(cs.value === "none" ? "none" : "popup"); setCaptionPreset(cs.value); markDirty(); }}
+                      onClick={() => { setCaptionStyle(cs.value === "none" ? "none" : "classic"); setCaptionPreset(cs.value); markDirty(); }}
                       className={cn(
                         "p-3.5 rounded-xl border-2 text-left transition-all duration-200",
                         captionPreset === cs.value && captionStyle !== "none"
@@ -560,7 +559,7 @@ export default function SettingsPage() {
 
               {/* Caption Position & Customization */}
               <Card className="glass-card p-5">
-                <SectionHeader icon={Sparkles} title="Default Caption Customization" description="Configure appearance and position of pop-up captions" color="bg-purple-500/10 text-purple-400" />
+                <SectionHeader icon={Sparkles} title="Default Caption Customization" description="Configure appearance and position of captions" color="bg-purple-500/10 text-purple-400" />
                 <CaptionEditor value={captionConfig} onChange={(v) => { setCaptionConfig(v); markDirty(); }} className="mt-4" />
               </Card>
 

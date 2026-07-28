@@ -136,14 +136,14 @@ export default function ClipEditorPage() {
   if (initialEditState && clip && !initialStateRef.current) {
     const duration = clip.duration_seconds || 0;
     const segments = initialEditState.clipSegments || initClipSegments(initialEditState.trim, duration);
-    const presetName = initialEditState.captionPreset || clip?.caption_preset || "popup";
+    const presetName = initialEditState.captionPreset || clip?.caption_preset || "classic";
     const presetDefaults = getCaptionPresetStyle(presetName);
     initialStateRef.current = {
       clipSegments: segments,
       captions: initialEditState.captions || { segments: [], overrides: [] },
       captionConfig: { ...presetDefaults, ...(initialEditState.captionConfig || {}) },
       captionPreset: presetName,
-      captionStyle: initialEditState.captionStyle || clip?.caption_style || "popup",
+      captionStyle: initialEditState.captionStyle || clip?.caption_style || "classic",
       exportSettings: initialEditState.exportSettings || { resolution: "1080x1920", fps: 30, bitrate: "high" },
     };
   }
@@ -288,14 +288,14 @@ export default function ClipEditorPage() {
   }, [undo, redo, saveMutation, stateToSave, toast, togglePlay, selectedSegmentId, deleteSegment, clipSegments, currentTime, splitSegment]);
 
   const handleExport = useCallback(() => {
-    const preset = historyState?.captionPreset || "popup";
+    const preset = historyState?.captionPreset || "classic";
     const config = historyState?.captionConfig || {};
     updateCaption.mutate(
-      { clipId, projectId, style: "popup", preset, position: "", captionConfig: config },
+      { clipId, projectId, style: "classic", preset, position: "", captionConfig: config },
       {
         onSuccess: () => {
           regenerate.mutate(
-            { clipId, projectId, settings: { captionStyle: "popup", captionPreset: preset, captionConfig: config } },
+            { clipId, projectId, settings: { captionStyle: "classic", captionPreset: preset, captionConfig: config } },
             {
               onSuccess: () => toast({ title: "Re-rendering with your caption settings", type: "info" }),
               onError: () => toast({ title: "Re-render failed", type: "error" }),
@@ -358,7 +358,7 @@ export default function ClipEditorPage() {
   }
 
   const duration = clip.duration_seconds || 0;
-  const captionConfig = historyState?.captionConfig || getCaptionPresetStyle(historyState?.captionPreset || "popup");
+  const captionConfig = historyState?.captionConfig || getCaptionPresetStyle(historyState?.captionPreset || "classic");
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-bg">
@@ -435,7 +435,7 @@ export default function ClipEditorPage() {
                 clip={clip}
                 transcript={transcript}
                 captionConfig={captionConfig}
-                captionPreset={historyState?.captionPreset || "popup"}
+                captionPreset={historyState?.captionPreset || "classic"}
                 currentTime={currentTime}
                 playing={playing}
                 activeCaptionIndex={activeCaptionIndex}

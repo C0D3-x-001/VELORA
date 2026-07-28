@@ -36,7 +36,7 @@ function Section({ icon: Icon, title, children, defaultOpen = true }) {
 
 export default function EditorLeftSidebar({ clip, transcript, editState, onUpdate, duration }) {
   const captionConfig = editState?.captionConfig || {};
-  const captionPreset = editState?.captionPreset || "popup";
+  const captionPreset = editState?.captionPreset || "classic";
   const exportSettings = editState?.exportSettings || { resolution: "1080x1920", fps: 30, bitrate: "high" };
   const meta = clip?.clip_metadata?.[0];
 
@@ -81,7 +81,7 @@ export default function EditorLeftSidebar({ clip, transcript, editState, onUpdat
                   const presetStyle = getCaptionPresetStyle(preset.value);
                   onUpdate({
                     captionPreset: preset.value,
-                    captionStyle: "popup",
+                    captionStyle: "classic",
                     captionConfig: { ...captionConfig, ...presetStyle },
                   });
                 }}

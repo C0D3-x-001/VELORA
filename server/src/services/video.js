@@ -2,7 +2,6 @@ import { spawn } from "child_process";
 import fs from "fs";
 import path from "path";
 import config from "../config/env.js";
-import { generatePremiumCaptionFile } from "./premium-captions.js";
 
 export const videoService = {
   async extractAudio(inputPath, outputPath) {
@@ -172,7 +171,7 @@ export const videoService = {
     ]);
   },
 
-  async addPopupCaptions(inputPath, outputPath, assPath) {
+  async burnAssCaptions(inputPath, outputPath, assPath) {
     const fwdPath = assPath.replace(/\\/g, "/");
     const escapedPath = fwdPath.replace(/:/g, "\\:");
     const fontsDir = path.join(process.cwd(), "fonts");
@@ -222,14 +221,6 @@ export const videoService = {
         return { success: true, fallback: true };
       }
     }
-  },
-
-  async generatePopupCaptionFile(segments, emphasisMap, outputPath, frameWidth, frameHeight, options) {
-    return generatePremiumCaptionFile(segments, emphasisMap, outputPath, "popup", frameWidth, frameHeight, options);
-  },
-
-  async generatePremiumCaptionFile(segments, emphasisMap, outputPath, presetName, frameWidth, frameHeight, options) {
-    return generatePremiumCaptionFile(segments, emphasisMap, outputPath, presetName, frameWidth, frameHeight, options);
   },
 
   formatASSTime(seconds) {

@@ -90,7 +90,7 @@ export default function EditorRightSidebar({ editState, onUpdate, clip, transcri
     highlightGlowIntensity: 5,
   };
 
-  const preset = editState?.captionPreset || "popup";
+  const preset = editState?.captionPreset || "classic";
   const effectiveConfig = useMemo(() => getCaptionPresetStyle(preset, config), [preset, config]);
 
   const updateConfig = useCallback((key, value) => {
@@ -123,7 +123,7 @@ export default function EditorRightSidebar({ editState, onUpdate, clip, transcri
     const presetStyle = getCaptionPresetStyle(newPreset);
     onUpdate({
       captionPreset: newPreset,
-      captionStyle: "popup",
+      captionStyle: "classic",
       captionConfig: { ...config, ...presetStyle },
     });
     setPreviewIdx(0);

@@ -138,7 +138,7 @@ describe("Caption generation with all presets", () => {
     ],
   };
 
-  const presets = ["popup", "classic", "bounce", "highlight", "karaoke", "minimal", "tiktok"];
+  const presets = ["classic", "bounce", "highlight", "karaoke", "minimal", "tiktok"];
 
   for (const presetName of presets) {
     it(`generates valid ASS for preset "${presetName}"`, async () => {
@@ -165,17 +165,6 @@ describe("Caption generation with all presets", () => {
     });
   }
 
-  it("popup preset has word-level positioning", async () => {
-    const outPath = path.join(TMPDIR, "velora-test-popup-pos.ass");
-    try {
-      await generatePremiumCaptionFile(mockSegments, mockEmphasis, outPath, "popup", 1080, 1920);
-      const content = fs.readFileSync(outPath, "utf-8");
-      assert.ok(content.includes("\\pos("), "Popup captions should use \\pos() for word positioning");
-    } finally {
-      try { fs.unlinkSync(outPath); } catch {}
-    }
-  });
-
   it("karaoke preset has \\kf tags", async () => {
     const outPath = path.join(TMPDIR, "velora-test-karaoke.ass");
     try {
@@ -190,7 +179,7 @@ describe("Caption generation with all presets", () => {
   it("handles empty segments gracefully", async () => {
     const outPath = path.join(TMPDIR, "velora-test-empty.ass");
     try {
-      await generatePremiumCaptionFile([], {}, outPath, "popup", 1080, 1920);
+      await generatePremiumCaptionFile([], {}, outPath, "classic", 1080, 1920);
       assert.ok(fs.existsSync(outPath), "Should still create ASS file");
       const content = fs.readFileSync(outPath, "utf-8");
       assert.ok(content.includes("[Events]"), "Should have valid header even with no dialogue");
@@ -224,7 +213,7 @@ describe("Caption generation with all presets", () => {
   it("emphasis words get different style names", async () => {
     const outPath = path.join(TMPDIR, "velora-test-emphasis.ass");
     try {
-      await generatePremiumCaptionFile(mockSegments, mockEmphasis, outPath, "popup", 1080, 1920);
+      await generatePremiumCaptionFile(mockSegments, mockEmphasis, outPath, "classic", 1080, 1920);
       const content = fs.readFileSync(outPath, "utf-8");
       const hasEmphasis = content.includes("Emphasis1") || content.includes("Emphasis2") || content.includes("Emphasis3");
       assert.ok(hasEmphasis, "Should have emphasis style lines for words with emphasis level > 0");

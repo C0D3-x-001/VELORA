@@ -61,29 +61,9 @@ const CAPTION_PRESETS = {
     animIn: 200,
     animOut: 150,
   },
-  popup: {
-    label: "Pop-Up",
-    desc: "One word at a time, elastic bounce animation",
-    wordByWord: true,
-    groupWords: false,
-    groupSize: 1,
-    fontSize: 120,
-    fontName: "Poppins",
-    primaryColor: "&H00FFFFFF",
-    highlightColor: "&H0000CCFF",
-    outlineColor: "&H00000000",
-    backColor: "&H80000000",
-    outlineWidth: 14,
-    shadowDepth: 10,
-    bold: true,
-    position: "center",
-    animation: "pop",
-    animIn: 80,
-    animOut: 80,
-  },
   tiktok: {
     label: "TikTok",
-    desc: "Word-by-word popup with Impact font, matching Pillow renderer style",
+    desc: "Word-by-word with Impact font, bold style",
     wordByWord: true,
     groupWords: false,
     groupSize: 3,
@@ -269,48 +249,8 @@ function getMarginV(preset, frameHeight) {
   }
 }
 
-function buildAdvancedPopupAnimation(cfg, emphasisLevel) {
-  const { animIn, animOut, highlightScale } = cfg;
-
-  let scalePct, rotationTag;
-  if (emphasisLevel >= 3) {
-    scalePct = 160;
-    rotationTag = "\\frz-4";
-  } else if (emphasisLevel >= 2) {
-    scalePct = Math.round(highlightScale * 100) + 10;
-    rotationTag = "";
-  } else {
-    scalePct = Math.round(highlightScale * 100);
-    rotationTag = "";
-  }
-
-  const scaleBase = 30;
-  const overshootPct = Math.round(scalePct * 1.1);
-  const dur = Math.max(animIn, Math.round(animIn * 1.875));
-  const t1 = Math.round(dur * 0.55);
-  const t2 = dur;
-
-  const glowShadowTag = cfg.highlightGlow
-    ? `\\4c${hexToASS(cfg.highlightGlowColor)}\\4a&H00\\shad${Math.max(1, Math.round(cfg.highlightGlowIntensity * 0.6))}`
-    : "";
-
-  return `{\\fscx${scaleBase}\\fscy${scaleBase}${rotationTag}${glowShadowTag}\\t(0,${t1},\\fscx${overshootPct}\\fscy${overshootPct})\\t(${t1},${t2},\\fscx100\\fscy100)\\fad(${dur},${animOut})\\b1}`;
-}
-
-function buildActiveWordStyle(cfg, idx) {
-  const fscx = Math.round(cfg.highlightScale * 100);
-  const color = hexToASS(cfg.highlightColor);
-  const outlineColor = hexToASS(cfg.outlineColor);
-  const shadowColor = hexToASS(cfg.shadowColor);
-  const bold = cfg.fontWeight >= 700 ? 1 : 0;
-  const outlineW = cfg.outlineWidth + 1;
-  const shadowD = cfg.shadowDepth + 1;
-
-  return `Style: Active${idx || ""},${cfg.fontName},${cfg.fontSize},${color},&H000000FF,${outlineColor},&H80000000,${bold},0,0,0,${fscx},${fscx},0,0,1,${outlineW},${shadowD},5,0,0,0,1`;
-}
-
-export async function generatePremiumCaptionFile(segments, emphasisMap, outputPath, presetName = "popup", frameWidth, frameHeight, options = {}) {
-  const preset = { ...(CAPTION_PRESETS[presetName] || CAPTION_PRESETS.popup) };
+export async function generatePremiumCaptionFile(segments, emphasisMap, outputPath, presetName = "classic", frameWidth, frameHeight, options = {}) {
+  const preset = { ...(CAPTION_PRESETS[presetName] || CAPTION_PRESETS.classic) };
   if (options.positionOverride) {
     preset.position = options.positionOverride;
   }
@@ -326,137 +266,10 @@ export async function generatePremiumCaptionFile(segments, emphasisMap, outputPa
 
   const marginV = getMarginV(preset, fH);
 
-  const baseFontSize = capStyle.fontSize;
-
-  const captionConfig = options.captionConfig || null;
-  const useAdvancedPopup = presetName === "popup" && captionConfig;
-
   let header;
   let dialogueLines = [];
 
-  if (useAdvancedPopup) {
-    const resolvedFontSize = captionConfig.fontSize
-      ? Math.round(captionConfig.fontSize * fH / 1920)
-      : baseFontSize;
-    const animSpeedMs = captionConfig.animationSpeed ? Math.round(captionConfig.animationSpeed * 1000) : null;
-    const cfg = {
-      frameWidth: fW,
-      frameHeight: fH,
-      fontSize: resolvedFontSize,
-      fontName: captionConfig.fontName || captionConfig.fontFamily || preset.fontName || "Poppins",
-      fontWeight: captionConfig.fontWeight || 700,
-      maxWidthPct: captionConfig.maxWidthPct || capStyle.maxWidthPct,
-      maxLines: captionConfig.maxLines || 2,
-      horizontalAlign: captionConfig.horizontalAlign || "center",
-      verticalPct: captionConfig.verticalPct !== undefined ? captionConfig.verticalPct : (captionConfig.verticalPosition !== undefined ? captionConfig.verticalPosition : 50),
-      letterSpacing: captionConfig.letterSpacing || 0,
-      lineHeight: captionConfig.lineHeight || 1.3,
-      paddingX: captionConfig.paddingX || 20,
-      paddingY: captionConfig.paddingY || 20,
-      highlightScale: captionConfig.highlightScale || 1.15,
-      animIn: captionConfig.animIn ?? (animSpeedMs || 80),
-      animOut: captionConfig.animOut ?? (animSpeedMs || 80),
-      highlightColor: captionConfig.highlightColor || "#00D4FF",
-      textColor: captionConfig.textColor || captionConfig.color || "#FFFFFF",
-      outlineColor: captionConfig.outlineColor || "#000000",
-      outlineWidth: captionConfig.outlineWidth !== undefined ? captionConfig.outlineWidth : 4,
-      shadowColor: captionConfig.shadowColor || "#000000",
-      shadowDepth: captionConfig.shadowDepth !== undefined ? captionConfig.shadowDepth : 3,
-      highlightBg: captionConfig.highlightBg || captionConfig.highlightBgColor || null,
-      highlightRadius: captionConfig.highlightRadius ?? captionConfig.highlightBgRadius ?? 0,
-      highlightGlow: captionConfig.highlightGlow || false,
-      highlightGlowColor: captionConfig.highlightGlowColor || "#00D4FF",
-      highlightGlowIntensity: captionConfig.highlightGlowIntensity || 5,
-    };
-
-    const primaryColor = hexToASS(cfg.textColor);
-    const outlineColorHex = hexToASS(cfg.outlineColor);
-    const bold = cfg.fontWeight >= 700 ? 1 : 0;
-
-    header = `[Script Info]
-Title: Velora Premium Captions
-ScriptType: v4.00+
-PlayResX: ${fW}
-PlayResY: ${fH}
-WrapStyle: 0
-ScaledBorderAndShadow: yes
-
-[V4+ Styles]
-Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Normal,${cfg.fontName},${cfg.fontSize},${primaryColor},&H000000FF,${outlineColorHex},&H80000000,${bold},0,0,0,100,100,${cfg.letterSpacing},0,1,${cfg.outlineWidth},${cfg.shadowDepth},5,0,0,0,1
-Style: Active,${cfg.fontName},${cfg.fontSize},${hexToASS(cfg.highlightColor)},&H000000FF,${outlineColorHex},&H80000000,${bold},0,0,0,${Math.round(cfg.highlightScale * 100)},${Math.round(cfg.highlightScale * 100)},${cfg.letterSpacing},0,1,${cfg.outlineWidth + 1},${cfg.shadowDepth + 1},5,0,0,0,1
-Style: Emphasis1,${cfg.fontName},${Math.round(cfg.fontSize * 1.1)},${hexToASS(cfg.highlightColor)},&H000000FF,${outlineColorHex},&H80000000,${bold},0,0,0,100,100,${cfg.letterSpacing},0,1,${cfg.outlineWidth + 1},${cfg.shadowDepth + 1},5,0,0,0,1
-Style: Emphasis2,${cfg.fontName},${Math.round(cfg.fontSize * 1.3)},${hexToASS(cfg.highlightColor)},&H000000FF,${outlineColorHex},&H80000000,${bold},0,0,0,100,100,${cfg.letterSpacing},0,1,${cfg.outlineWidth + 2},${cfg.shadowDepth + 1},5,0,0,0,1
-Style: Emphasis3,${cfg.fontName},${Math.round(cfg.fontSize * 1.5)},${hexToASS(cfg.highlightColor)},&H000000FF,${outlineColorHex},&H80000000,${bold},0,0,0,100,100,${cfg.letterSpacing},0,1,${cfg.outlineWidth + 2},${cfg.shadowDepth + 1},5,0,0,0,1
-
-[Events]
-Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
-`;
-
-    segments.forEach((seg, segIdx) => {
-      if (!seg.text?.trim() || seg.end <= seg.start) return;
-      if (isNonSpeechSegment(seg.text)) return;
-
-      const allWords = (seg.words && seg.words.length > 0)
-        ? seg.words.map((w) => w.word)
-        : seg.text.trim().split(/\s+/).filter(Boolean);
-      if (allWords.length === 0) return;
-
-      const wordTimestamps = getWordTimestamps(seg.start, seg.end, allWords, seg.words);
-      const layout = computeLayout(allWords, cfg);
-      const timedWords = attachTiming(layout.words, wordTimestamps);
-
-      const segEmphasis = emphasisMap?.[segIdx] || [];
-      const emphasisWords = new Map();
-      segEmphasis.forEach((e) => {
-        const clean = e.word.toLowerCase().replace(/[^a-z]/g, "");
-        emphasisWords.set(clean, e);
-      });
-
-      timedWords.forEach((tw) => {
-        if (tw.start == null || tw.end == null || tw.end <= tw.start) return;
-
-        const cleanWord = tw.word.toLowerCase().replace(/[^a-z]/g, "");
-        const emph = emphasisWords.get(cleanWord);
-        const level = emph?.level || 0;
-
-        let styleName = "Normal";
-        let animOverride = "";
-
-        if (level >= 3) {
-          styleName = "Emphasis3";
-          animOverride = buildAdvancedPopupAnimation(cfg, 3);
-        } else if (level >= 2) {
-          styleName = "Emphasis2";
-          animOverride = buildAdvancedPopupAnimation(cfg, 2);
-        } else if (level >= 1) {
-          styleName = "Emphasis1";
-          animOverride = buildAdvancedPopupAnimation(cfg, 1);
-        }
-
-        const displayWord = (level >= 2 && (emph?.type === "punchline" || emph?.type === "hook"))
-          ? tw.word.toUpperCase()
-          : tw.word;
-
-        const wordDurationMs = (tw.end - tw.start) * 1000;
-        let animation;
-
-        if (wordDurationMs < 200) {
-          animation = `{\\fad(40,40)\\b1}`;
-        } else if (animOverride) {
-          animation = animOverride;
-        } else {
-          animation = buildAdvancedPopupAnimation(cfg, 0);
-        }
-
-        const escapedWord = escapeASSText(displayWord);
-
-        dialogueLines.push(`Dialogue: 0,${formatASSTime(tw.start)},${formatASSTime(tw.end)},${styleName},,0,0,0,,{${animation.replace(/^{/, "").replace(/}$/, "")}\\pos(${tw.x},${tw.y})\\an7}${escapedWord}`);
-      });
-    });
-
-  } else {
-    const nonAdvFontSize = Math.round((preset.fontSize || 120) * fH / 1920);
+  const nonAdvFontSize = Math.round((preset.fontSize || 120) * fH / 1920);
     header = `[Script Info]
 Title: Velora Premium Captions
 ScriptType: v4.00+
@@ -717,10 +530,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         });
       }
     });
-  }
 
   const ass = header + dialogueLines.join("\n") + "\n";
-  console.log(`[Captions] Generated ASS: ${dialogueLines.length} dialogue lines, ${segments.length} segments, preset=${presetName} advanced=${useAdvancedPopup}`);
+  console.log(`[Captions] Generated ASS: ${dialogueLines.length} dialogue lines, ${segments.length} segments, preset=${presetName}`);
   if (dialogueLines.length === 0) {
     console.warn(`[Captions] WARNING: ASS file has NO dialogue lines — captions will be invisible`);
     console.warn(`[Captions] Debug: segments.length=${segments.length}, first segment words=${segments[0]?.words?.length ?? 'none'}, first segment text="${segments[0]?.text?.slice(0, 50) ?? ''}"`);

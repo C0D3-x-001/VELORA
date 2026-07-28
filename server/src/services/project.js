@@ -9,7 +9,6 @@ import { uploadFile, getSignedUrl } from "./storage.js";
 import { applyVideoEnhancements } from "./video-processing/index.js";
 import { transcribeAudio, sliceTranscript, isWhisperReady } from "./transcription.js";
 import { segmentsToSRT } from "./srt-utils.js";
-import { generatePremiumCaptionFile } from "./premium-captions.js";
 import config from "../config/env.js";
 import fs from "fs";
 import path from "path";
@@ -334,11 +333,6 @@ export async function generateClips(userId, projectId, settings) {
     throw new Error(`Insufficient credits. Need ${estimatedCredits}, have ${balance.balance}`);
   }
 
-  const POPUP_CAPTION_TIERS = ["pro", "business"];
-  if (settings.captionStyle === "popup" && !POPUP_CAPTION_TIERS.includes(balance.plan)) {
-    throw new Error("Pop-Up Captions require a Pro or Business subscription. Please upgrade your plan.");
-  }
-
   const CLOSEUP_FRAMING_TIERS = ["pro", "business"];
   if (settings.closeUpFraming && !CLOSEUP_FRAMING_TIERS.includes(balance.plan)) {
     throw new Error("AI Close-Up Framing requires a Pro or Business subscription. Please upgrade your plan.");
@@ -585,18 +579,6 @@ async function processVideoBackground(projectId, project, userId, settings, esti
       };
     }
 
-    let emphasisMap = {};
-    if (settings.captionStyle === "popup") {
-      try {
-        log(`Running emphasis analysis for pop-up captions...`);
-        emphasisMap = await aiService.analyzeTranscriptEmphasis(transcript.segments || []);
-        const emphWordCount = Object.values(emphasisMap).reduce((sum, arr) => sum + arr.length, 0);
-        log(`Emphasis analysis done — ${emphWordCount} emphasized words across ${Object.keys(emphasisMap).length} segments`);
-      } catch (emphErr) {
-        err(`Emphasis analysis failed: ${emphErr.message} — using heuristic fallback`);
-      }
-    }
-
     const moments = analysis.moments || [];
     const targetDuration = clipDuration;
     const maxStart = clipDuration != null ? Math.max(0, totalDuration - targetDuration) : totalDuration;
@@ -702,7 +684,7 @@ async function processVideoBackground(projectId, project, userId, settings, esti
     // ── Clean stale temp files from any previous run ──
     const clipDir = videoPath ? path.dirname(videoPath) : null;
     if (clipDir && fs.existsSync(clipDir)) {
-      const stalePrefixes = [`clip_${projectId}_`, `clip_v_${projectId}_`, `thumb_${projectId}_`, `sub_${projectId}_`, `popup_${projectId}_`, `clip_burned_${projectId}_`, `enhanced_`];
+        const stalePrefixes = [`clip_${projectId}_`, `clip_v_${projectId}_`, `thumb_${projectId}_`, `sub_${projectId}_`, `clip_burned_${projectId}_`, `enhanced_`];
       fs.readdirSync(clipDir)
         .filter((f) => stalePrefixes.some((p) => f.startsWith(p)))
         .forEach((f) => { try { fs.unlinkSync(path.join(clipDir, f)); } catch {} });
@@ -846,47 +828,6 @@ async function processVideoBackground(projectId, project, userId, settings, esti
 
       let videoToUpload = finalClipPath;
       try {
-        if (settings.captionStyle === "popup") {
-          const clipTranscript = sliceTranscript(transcript, clipStartTime, endTime);
-          let captionSegments = clipTranscript.segments;
-
-          try {
-            const clipEmphasis = {};
-            (transcript.segments || []).forEach((fullSeg, fullIdx) => {
-              if (fullSeg.end > clipStartTime && fullSeg.start < endTime && emphasisMap[fullIdx]) {
-                const adjustedIdx = captionSegments.findIndex((a) => Math.abs(a.start - Math.max(0, fullSeg.start - clipStartTime)) < 0.5);
-                if (adjustedIdx >= 0) clipEmphasis[adjustedIdx] = emphasisMap[fullIdx];
-              }
-            });
-            const captionPreset = settings.captionPreset || "popup";
-            const captionOpts = {};
-            if (settings.captionPosition) captionOpts.positionOverride = settings.captionPosition;
-            if (settings.captionConfig) captionOpts.captionConfig = settings.captionConfig;
-            const captionWidth = needsVertical ? 1080 : probe.width;
-            const captionHeight = needsVertical ? 1920 : probe.height;
-            const assPath = path.join(path.dirname(videoPath), `popup_${projectId}_${i}.ass`);
-            await generatePremiumCaptionFile(captionSegments, clipEmphasis, assPath, captionPreset, captionWidth, captionHeight, captionOpts);
-            if (fs.existsSync(assPath)) {
-              const assContent = fs.readFileSync(assPath, "utf-8");
-              if (!assContent.includes("Dialogue:")) {
-                log(`ASS file has no dialogue lines for clip ${i} — skipping burn`);
-                try { fs.unlinkSync(assPath); } catch {}
-              } else {
-                const burnedPath = path.join(path.dirname(videoPath), `clip_burned_${projectId}_${i}.mp4`);
-                const burnResult = await videoService.addPopupCaptions(finalClipPath, burnedPath, assPath);
-                if (burnResult?.fallback) {
-                  log(`Premium captions (ASS burn) fell back to raw clip ${i} — FFmpeg ASS filter may have failed`);
-                } else if (fs.existsSync(burnedPath)) {
-                  videoToUpload = burnedPath;
-                  log(`Premium captions (${captionPreset}) burned into clip ${i}`);
-                }
-                try { fs.unlinkSync(assPath); } catch {}
-              }
-            }
-          } catch (assErr) {
-            err(`ASS caption rendering failed for clip ${i}: ${assErr.message} — using raw clip`);
-          }
-        }
         const clipBuffer = await fs.promises.readFile(videoToUpload);
         const clipFileName = `clip_${projectId}_${i}.mp4`;
         await uploadFile("velora-storage", `users/${userId}/projects/${projectId}/clips/${clipFileName}`, clipBuffer, "video/mp4");
@@ -917,31 +858,7 @@ async function processVideoBackground(projectId, project, userId, settings, esti
       }
 
       try {
-        if (settings.captionStyle === "popup") {
-          clipSubtitlesUrl = null;
-          if (videoToUpload === finalClipPath) {
-            try {
-              const adjustedSegments = clipSegments.map((s) => ({
-                start: Math.max(0, s.start - clipStartTime),
-                end: Math.max(0, s.end - clipStartTime),
-                text: s.text,
-              }));
-              const vttPath = path.join(path.dirname(videoPath), `sub_fallback_${projectId}_${i}.vtt`);
-              await videoService.generateCaptionFile(adjustedSegments, vttPath);
-              if (fs.existsSync(vttPath)) {
-                const vttBuffer = await fs.promises.readFile(vttPath);
-                const vttFileName = `sub_${projectId}_${i}.vtt`;
-                const vttStoragePath = `users/${userId}/projects/${projectId}/subtitles/${vttFileName}`;
-                await uploadFile("velora-storage", vttStoragePath, vttBuffer, "text/vtt");
-                clipSubtitlesUrl = `/api/v1/clips/subtitles/${userId}/${projectId}/${vttFileName}`;
-                log(`Popup VTT fallback generated for clip ${i} (ASS burn was skipped)`);
-                try { fs.unlinkSync(vttPath); } catch {}
-              }
-            } catch (vttErr) {
-              log(`Popup VTT fallback failed for clip ${i}: ${vttErr.message}`);
-            }
-          }
-        } else {
+        if (captionStyle !== "none" && clipSegments.length > 0) {
           const adjustedSegments = clipSegments.map((s) => ({
             start: Math.max(0, s.start - clipStartTime),
             end: Math.max(0, s.end - clipStartTime),
@@ -984,7 +901,7 @@ async function processVideoBackground(projectId, project, userId, settings, esti
         end_time: Math.round(endTime),
         viral_score: viralScore,
         caption_style: settings.captionStyle || "modern",
-        caption_preset: settings.captionPreset || "popup",
+        caption_preset: settings.captionPreset || "classic",
         caption_config: settings.captionConfig || null,
         caption_position: settings.captionPosition || null,
         status: "completed",
@@ -1040,7 +957,7 @@ async function processVideoBackground(projectId, project, userId, settings, esti
           import("./video-editing/index.js").then(({ editClip }) => {
             editClip(projectId, clip.id, userId, {
               platform: settings.platform || "tiktok",
-              captionStyle: settings.captionStyle || "popup",
+              captionStyle: settings.captionStyle || "classic",
             }).catch((e) => console.error(`[AI-Edit] Auto-edit failed for clip ${clip.id}:`, e.message));
           }).catch(() => {});
         }
@@ -1135,7 +1052,7 @@ async function processVideoBackground(projectId, project, userId, settings, esti
     try {
       const clipDir = videoPath ? path.dirname(videoPath) : null;
       if (clipDir && fs.existsSync(clipDir)) {
-        const prefixes = [`clip_${projectId}_`, `clip_v_${projectId}_`, `thumb_${projectId}_`, `sub_${projectId}_`, `popup_${projectId}_`, `clip_burned_${projectId}_`];
+        const prefixes = [`clip_${projectId}_`, `clip_v_${projectId}_`, `thumb_${projectId}_`, `sub_${projectId}_`, `clip_burned_${projectId}_`];
         fs.readdirSync(clipDir)
           .filter((f) => prefixes.some((p) => f.startsWith(p)))
           .forEach((f) => { try { fs.unlinkSync(path.join(clipDir, f)); } catch {} });
@@ -1305,7 +1222,7 @@ function generateMockClips(projectId, count, duration, settings) {
       end_time: startTime + duration,
       viral_score: viralScore,
       caption_style: settings.captionStyle || "modern",
-      caption_preset: settings.captionPreset || "popup",
+      caption_preset: settings.captionPreset || "classic",
       status: "completed",
       order_index: i,
       title: titles[i % titles.length],

@@ -58,7 +58,7 @@ router.post("/:projectId/:clipId", async (req, res) => {
     try {
       result = await editClip(projectId, clipId, userId, {
         platform: req.body?.platform || "tiktok",
-        captionStyle: req.body?.captionStyle || "popup",
+        captionStyle: req.body?.captionStyle || "classic",
       });
     } catch (err) {
       await refundCredits(userId, creditCost, "AI editing failed — refund", projectId);
