@@ -1,5 +1,5 @@
 import fs from "fs";
-import { computeCenteredWordPosition } from "./caption-layout.js";
+import { computeCenteredGroupPositions } from "./caption-layout.js";
 import { getCaptionStyle } from "./get-caption-style.js";
 
 const W = 1080;
@@ -168,6 +168,8 @@ const CAPTION_PRESETS = {
     wordByWord: true,
     groupWords: false,
     groupSize: 1,
+    maxWordsOnScreen: 3,
+    dimColor: "&H00AAAAAA",
     fontSize: 80,
     fontName: "Impact",
     primaryColor: "&H00FFFFFF",
@@ -348,28 +350,17 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         });
         const normalizedFontSize = Math.round((preset.fontSize || 120) * fH / 1920);
         const verticalPct = preset.verticalPct ?? (preset.position === "center" ? 50 : preset.position === "center-low" ? 60 : 80);
-        const timedWords = wordTimestamps.map((wt) => ({
-          ...computeCenteredWordPosition(wt.word, {
-            frameWidth: fW,
-            frameHeight: fH,
-            fontSize: normalizedFontSize,
-            fontWeight: preset.bold ? 700 : 400,
-            letterSpacing: 0,
-            verticalPct,
-          }),
-          start: wt.start,
-          end: wt.end,
-        }));
+        const maxWordsOnScreen = Math.max(1, preset.maxWordsOnScreen || 1);
+        const dimColor = preset.dimColor || preset.primaryColor;
 
-        timedWords.forEach((tw) => {
-          if (tw.start == null || tw.end == null || tw.end <= tw.start) return;
+        const wordInfos = wordTimestamps.map((wt) => {
+          if (wt.start == null || wt.end == null || wt.end <= wt.start) return null;
 
-          const cleanWord = tw.word.toLowerCase().replace(/[^a-z]/g, "");
+          const cleanWord = wt.word.toLowerCase().replace(/[^a-z]/g, "");
           const emph = emphasisWords.get(cleanWord);
           const level = emph?.level || 0;
 
           let styleName = "Normal";
-          let animation = "";
           let scaleBase = 100;
           let scaleTarget = 100;
 
@@ -392,12 +383,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
           }
 
           const displayWord = (level >= 2 && (emph?.type === "punchline" || emph?.type === "hook"))
-            ? tw.word.toUpperCase()
-            : tw.word;
+            ? wt.word.toUpperCase()
+            : wt.word;
 
-          const escapedWord = escapeASSText(displayWord);
-          const wordDurationMs = (tw.end - tw.start) * 1000;
-
+          const wordDurationMs = (wt.end - wt.start) * 1000;
+          let animation;
           if (wordDurationMs < 200) {
             animation = `{\\fad(40,40)\\b1}`;
           } else if (preset.animation === "bounce") {
@@ -410,10 +400,46 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             animation = buildFadeAnimation(preset.animIn, preset.animOut);
           }
 
-          const startStr = formatASSTime(tw.start);
-          const endStr = formatASSTime(tw.end);
+          return { start: wt.start, end: wt.end, displayWord, styleName, animation };
+        });
 
-          dialogueLines.push(`Dialogue: 0,${startStr},${endStr},${styleName},,0,0,0,,{${animation.replace(/^{/, "").replace(/}$/, "")}\\pos(${tw.x},${tw.y})\\an7}${escapedWord}`);
+        wordInfos.forEach((info, i) => {
+          if (!info) return;
+
+          const windowStart = Math.max(0, i - maxWordsOnScreen + 1);
+          const window = wordInfos.slice(windowStart, i + 1).filter(Boolean);
+
+          const groupPositions = computeCenteredGroupPositions(
+            window.map((w) => w.displayWord),
+            {
+              frameWidth: fW,
+              frameHeight: fH,
+              fontSize: normalizedFontSize,
+              fontWeight: preset.bold ? 700 : 400,
+              letterSpacing: 0,
+              verticalPct,
+            }
+          );
+          const anchorX = groupPositions[0].x;
+          const anchorY = groupPositions[0].y;
+
+          const wordSegments = window.map((w, wi) => {
+            const escapedWord = escapeASSText(w.displayWord);
+            const isActive = wi === window.length - 1;
+            let tag = isActive
+              ? w.animation.replace(/^{/, "").replace(/}$/, "")
+              : `\\c${dimColor}`;
+            if (wi === 0) {
+              tag = `\\pos(${anchorX},${anchorY})\\an7${tag}`;
+            }
+            return `{${tag}}${escapedWord}`;
+          });
+          const fullText = wordSegments.join(" ");
+
+          const startStr = formatASSTime(info.start);
+          const endStr = formatASSTime(info.end);
+
+          dialogueLines.push(`Dialogue: 0,${startStr},${endStr},${info.styleName},,0,0,0,,${fullText}`);
         });
 
       } else if (preset.animation === "highlight") {

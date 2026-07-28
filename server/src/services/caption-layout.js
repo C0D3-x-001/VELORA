@@ -177,6 +177,21 @@ function computeWordPositions(lines, config) {
   return { words: positionedWords, lines: lineData };
 }
 
+export function computeCenteredGroupPositions(words, config = {}) {
+  const cfg = { ...DEFAULT_CONFIG, ...config };
+  const spaceWidth = estimateCharWidth(cfg.fontSize, cfg.fontWeight) * 0.6;
+  const widths = words.map((w) => measureWord(w, cfg.fontSize, cfg.fontWeight, cfg.letterSpacing));
+  const totalWidth = widths.reduce((sum, w) => sum + w, 0) + spaceWidth * Math.max(0, words.length - 1);
+  const y = Math.round(cfg.frameHeight * (1 - cfg.verticalPct / 100));
+  let cursorX = Math.round((cfg.frameWidth - totalWidth) / 2);
+  return words.map((word, i) => {
+    const width = widths[i];
+    const pos = { word, x: Math.round(cursorX), y, width: Math.round(width) };
+    cursorX += width + spaceWidth;
+    return pos;
+  });
+}
+
 export function computeCenteredWordPosition(word, config = {}) {
   const cfg = { ...DEFAULT_CONFIG, ...config };
   const width = measureWord(word, cfg.fontSize, cfg.fontWeight, cfg.letterSpacing);
