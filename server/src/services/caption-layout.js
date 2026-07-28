@@ -177,6 +177,14 @@ function computeWordPositions(lines, config) {
   return { words: positionedWords, lines: lineData };
 }
 
+export function computeCenteredWordPosition(word, config = {}) {
+  const cfg = { ...DEFAULT_CONFIG, ...config };
+  const width = measureWord(word, cfg.fontSize, cfg.fontWeight, cfg.letterSpacing);
+  const x = Math.round((cfg.frameWidth - width) / 2);
+  const y = Math.round(cfg.frameHeight * (1 - cfg.verticalPct / 100));
+  return { word, x, y, width: Math.round(width), height: Math.round(cfg.fontSize) };
+}
+
 export function computeLayout(rawWords, config = {}) {
   const cfg = { ...DEFAULT_CONFIG, ...config };
 

@@ -227,7 +227,11 @@ async function regenerateClipBackground({ clip, project, userId, creditsNeeded, 
           start: Math.max(0, s.start - actualStartTime),
           end: Math.max(0, s.end - actualStartTime),
           text: s.text,
-          words: s.words,
+          words: (s.words || []).map((w) => ({
+            ...w,
+            start: Math.max(0, w.start - actualStartTime),
+            end: Math.max(0, w.end - actualStartTime),
+          })),
         }));
         const assPath = path.join(clipDir, `regen_sub_${shortId}.ass`);
         tempFiles.push(assPath);

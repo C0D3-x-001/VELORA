@@ -1,5 +1,5 @@
 import fs from "fs";
-import { computeLayout, attachTiming } from "./caption-layout.js";
+import { computeCenteredWordPosition } from "./caption-layout.js";
 import { getCaptionStyle } from "./get-caption-style.js";
 
 const W = 1080;
@@ -337,30 +337,29 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
       });
 
       if (preset.wordByWord) {
-        const wordTimestamps = getWordTimestamps(seg.start, seg.end, allWords, seg.words);
-        const normalizedFontSize = Math.round((preset.fontSize || 120) * fH / 1920);
-        const layout = computeLayout(allWords, {
-          frameWidth: fW,
-          frameHeight: fH,
-          fontSize: normalizedFontSize,
-          fontName: preset.fontName,
-          fontWeight: preset.bold ? 700 : 400,
-          maxWidthPct: capStyle.maxWidthPct,
-          maxLines: 2,
-          horizontalAlign: "center",
-          verticalPct: preset.position === "center" ? 50 : preset.position === "center-low" ? 60 : 80,
-          letterSpacing: 0,
-          lineHeight: 1.3,
-          paddingX: 20,
-          paddingY: 20,
-          highlightScale: 1.15,
-          animIn: preset.animIn,
-          animOut: preset.animOut,
-          highlightColor: preset.highlightColor,
-          outlineWidth: preset.outlineWidth,
-          shadowDepth: preset.shadowDepth,
+        const rawWordTimestamps = getWordTimestamps(seg.start, seg.end, allWords, seg.words);
+        const OVERLAP_GAP = 0.01;
+        const wordTimestamps = rawWordTimestamps.map((wt, i, arr) => {
+          const next = arr[i + 1];
+          if (next && wt.end > next.start - OVERLAP_GAP) {
+            return { ...wt, end: Math.max(wt.start + 0.03, next.start - OVERLAP_GAP) };
+          }
+          return wt;
         });
-        const timedWords = attachTiming(layout.words, wordTimestamps);
+        const normalizedFontSize = Math.round((preset.fontSize || 120) * fH / 1920);
+        const verticalPct = preset.verticalPct ?? (preset.position === "center" ? 50 : preset.position === "center-low" ? 60 : 80);
+        const timedWords = wordTimestamps.map((wt) => ({
+          ...computeCenteredWordPosition(wt.word, {
+            frameWidth: fW,
+            frameHeight: fH,
+            fontSize: normalizedFontSize,
+            fontWeight: preset.bold ? 700 : 400,
+            letterSpacing: 0,
+            verticalPct,
+          }),
+          start: wt.start,
+          end: wt.end,
+        }));
 
         timedWords.forEach((tw) => {
           if (tw.start == null || tw.end == null || tw.end <= tw.start) return;
