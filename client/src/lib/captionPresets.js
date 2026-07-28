@@ -18,6 +18,25 @@ const PRESET_STYLES = {
     animOut: 0,
     animType: "instant",
   },
+  popup: {
+    fontName: "Impact",
+    fontWeight: 900,
+    outlineWidth: 5,
+    outlineColor: "#000000",
+    shadowDepth: 3,
+    shadowColor: "rgba(0,0,0,0.5)",
+    textColor: "#FFFFFF",
+    highlightColor: "#FFD400",
+    highlightScale: 1.15,
+    highlightGlow: true,
+    highlightGlowColor: "#FFD400",
+    highlightGlowIntensity: 5,
+    highlightBg: null,
+    highlightRadius: 0,
+    animIn: 80,
+    animOut: 60,
+    animType: "bounce",
+  },
   bounce: {
     fontName: "Montserrat",
     fontWeight: 800,
@@ -116,6 +135,7 @@ const PRESET_STYLES = {
 };
 
 const PRESET_LIST = [
+  { value: "popup", label: "Pop-Up", icon: "Pu" },
   { value: "tiktok", label: "TikTok", icon: "T" },
   { value: "bounce", label: "Bounce", icon: "Bn" },
   { value: "highlight", label: "Highlight", icon: "H" },

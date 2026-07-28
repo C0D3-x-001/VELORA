@@ -17,6 +17,7 @@ import { cn, getErrorMessage } from "../../lib/utils";
 import CaptionEditor from "../../components/ui/CaptionEditor/CaptionEditor";
 
 const captionStyles = [
+  { value: "popup", label: "Pop-Up", desc: "One word at a time, bounces with color emphasis" },
   { value: "bounce", label: "Bounce", desc: "Words bounce in with energy" },
   { value: "highlight", label: "Highlight", desc: "Full sentence, current word highlighted" },
   { value: "karaoke", label: "Karaoke", desc: "Words light up as spoken" },
@@ -221,7 +222,7 @@ export default function SettingsPage() {
     if (serverSettings && !initializedRef.current) {
       initializedRef.current = true;
       const savedStyle = serverSettings.default_caption_style || "classic";
-      const validPresets = ["bounce", "highlight", "karaoke", "classic", "minimal"];
+      const validPresets = ["popup", "bounce", "highlight", "karaoke", "classic", "minimal"];
       setCaptionStyle(validPresets.includes(savedStyle) ? "classic" : savedStyle);
       setCaptionPreset(validPresets.includes(savedStyle) ? savedStyle : (serverSettings.default_caption_preset || "classic"));
       setCaptionPosition(serverSettings.default_caption_position || "center");

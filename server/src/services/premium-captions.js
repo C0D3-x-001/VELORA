@@ -162,6 +162,27 @@ const CAPTION_PRESETS = {
     animIn: 150,
     animOut: 100,
   },
+  popup: {
+    label: "Pop-Up",
+    desc: "One word at a time with bounce and color emphasis",
+    wordByWord: true,
+    groupWords: false,
+    groupSize: 1,
+    fontSize: 80,
+    fontName: "Impact",
+    primaryColor: "&H00FFFFFF",
+    highlightColor: "&H0000D4FF",
+    outlineColor: "&H00000000",
+    backColor: "&H80000000",
+    outlineWidth: 5,
+    shadowDepth: 3,
+    bold: true,
+    position: "center",
+    animation: "popup",
+    animIn: 80,
+    animOut: 60,
+    verticalPct: 55,
+  },
 };
 
 function formatASSTime(seconds) {
@@ -233,6 +254,14 @@ function buildBounceAnimation(effectTag, scaleBase, scaleTarget, animIn, animOut
 
 function buildFadeAnimation(animIn, animOut) {
   return `{\\fad(${animIn},${animOut})\\b1}`;
+}
+
+function buildPopupAnimation(accentColor, scaleBase, scaleTarget, animIn, animOut) {
+  const peakTime = Math.round(animIn * 0.6);
+  return `{\\fscx${scaleBase}\\fscy${scaleBase}\\1c${accentColor}`
+    + `\\t(0,${peakTime},\\fscx${scaleTarget}\\fscy${scaleTarget}\\1c&H00FFFFFF&)`
+    + `\\t(${peakTime},${animIn},\\fscx100\\fscy100)`
+    + `\\fad(${animIn},${animOut})\\b1}`;
 }
 
 function getMarginV(preset, frameHeight) {
@@ -376,6 +405,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             animation = buildBounceAnimation("", scaleBase, scaleTarget, preset.animIn, preset.animOut);
           } else if (preset.animation === "pop") {
             animation = buildPopAnimation("", scaleBase, scaleTarget, preset.animIn, preset.animOut);
+          } else if (preset.animation === "popup") {
+            animation = buildPopupAnimation(preset.highlightColor, scaleBase, scaleTarget, preset.animIn, preset.animOut);
           } else {
             animation = buildFadeAnimation(preset.animIn, preset.animOut);
           }
@@ -516,6 +547,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             animation = buildPopAnimation("", scaleBase, scaleTarget, preset.animIn, preset.animOut);
           } else if (preset.animation === "bounce") {
             animation = buildBounceAnimation("", scaleBase, scaleTarget, preset.animIn, preset.animOut);
+          } else if (preset.animation === "popup") {
+            animation = buildPopupAnimation(preset.highlightColor, scaleBase, scaleTarget, preset.animIn, preset.animOut);
           } else {
             animation = buildFadeAnimation(preset.animIn, preset.animOut);
           }

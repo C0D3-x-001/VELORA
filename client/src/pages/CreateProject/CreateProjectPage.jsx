@@ -55,6 +55,7 @@ const platforms = [
 ];
 
 const captionStyles = [
+  { value: "popup", label: "Pop-Up", desc: "One word at a time, bounces with color emphasis", pro: true },
   { value: "bounce", label: "Bounce", desc: "Words bounce in with energy", pro: true },
   { value: "highlight", label: "Highlight", desc: "Full sentence, current word highlighted", pro: true },
   { value: "karaoke", label: "Karaoke", desc: "Words light up as spoken", pro: true },
@@ -322,7 +323,7 @@ const [autoSpeakerSwitch, setAutoSpeakerSwitch] = useState(true);
     if (serverSettings) {
       setPlatform(serverSettings.default_platform || "vertical");
       const savedStyle = serverSettings.default_caption_style || "classic";
-      const validPresets = ["bounce", "highlight", "karaoke", "classic", "minimal"];
+      const validPresets = ["popup", "bounce", "highlight", "karaoke", "classic", "minimal"];
       const mappedPreset = serverSettings.default_caption_preset || (validPresets.includes(savedStyle) ? savedStyle : "classic");
       setCaptionStyle("classic");
       setCaptionPreset(mappedPreset);

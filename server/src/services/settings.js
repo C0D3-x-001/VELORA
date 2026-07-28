@@ -53,7 +53,7 @@ const VALID_CAPTION_STYLES = ["modern", "karaoke", "minimal", "none"];
 const VALID_PLATFORMS = ["tiktok", "youtube", "reels", "vertical", "landscape"];
 const VALID_THEMES = ["dark", "light", "system"];
 const VALID_CLOSE_UP_MODES = ["closeup", "medium", "wide"];
-const VALID_CAPTION_PRESETS = ["classic", "bounce", "highlight", "karaoke", "minimal"];
+const VALID_CAPTION_PRESETS = ["classic", "popup", "bounce", "highlight", "karaoke", "minimal"];
 
 export async function updateSettings(userId, settings) {
   const payload = {

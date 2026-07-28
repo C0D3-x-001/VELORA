@@ -138,7 +138,7 @@ describe("Caption generation with all presets", () => {
     ],
   };
 
-  const presets = ["classic", "bounce", "highlight", "karaoke", "minimal", "tiktok"];
+  const presets = ["classic", "bounce", "highlight", "karaoke", "minimal", "tiktok", "popup"];
 
   for (const presetName of presets) {
     it(`generates valid ASS for preset "${presetName}"`, async () => {
