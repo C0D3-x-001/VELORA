@@ -1,6 +1,6 @@
 const PRESET_STYLES = {
   tiktok: {
-    fontName: "Impact",
+    fontName: "Anton",
     fontWeight: 900,
     outlineWidth: 3,
     outlineColor: "#000000",
@@ -19,7 +19,7 @@ const PRESET_STYLES = {
     animType: "instant",
   },
   popup: {
-    fontName: "Impact",
+    fontName: "Anton",
     fontWeight: 900,
     outlineWidth: 5,
     outlineColor: "#000000",

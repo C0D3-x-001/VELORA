@@ -50,7 +50,7 @@ const CAPTION_PRESETS = {
     fontSize: 56,
     fontName: "Inter",
     primaryColor: "&H00FFFFFF",
-    highlightColor: "&H0000CCFF",
+    highlightColor: "&H00F7C34F",
     outlineColor: "&H00000000",
     backColor: "&H80000000",
     outlineWidth: 3,
@@ -68,7 +68,7 @@ const CAPTION_PRESETS = {
     groupWords: false,
     groupSize: 3,
     fontSize: 80,
-    fontName: "Impact",
+    fontName: "Anton",
     primaryColor: "&H00FFFFFF",
     highlightColor: "&H0000DCFF",
     outlineColor: "&H00000000",
@@ -91,7 +91,7 @@ const CAPTION_PRESETS = {
     fontSize: 68,
     fontName: "Poppins",
     primaryColor: "&H00FFFFFF",
-    highlightColor: "&H0000AAFF",
+    highlightColor: "&H0000D7FF",
     outlineColor: "&H00000000",
     backColor: "&H80000000",
     outlineWidth: 4,
@@ -168,10 +168,10 @@ const CAPTION_PRESETS = {
     wordByWord: true,
     groupWords: false,
     groupSize: 1,
-    maxWordsOnScreen: 1,
+    maxWordsOnScreen: 3,
     dimColor: "&H00AAAAAA",
     fontSize: 80,
-    fontName: "Impact",
+    fontName: "Anton",
     primaryColor: "&H00FFFFFF",
     highlightColor: "&H0000D4FF",
     outlineColor: "&H00000000",
@@ -524,15 +524,24 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 : Math.min(5, allWords.length))
           : allWords.length;
         const groups = [];
+        const groupIndexRanges = [];
         for (let g = 0; g < allWords.length; g += groupSize) {
           groups.push(allWords.slice(g, g + groupSize));
+          groupIndexRanges.push([g, Math.min(g + groupSize, allWords.length)]);
         }
 
-        const groupDuration = segDuration / groups.length;
+        // Use real per-word Whisper timestamps for each group's on-screen window
+        // instead of evenly dividing the segment duration — even division ignores
+        // pauses/pacing within the segment and was causing captions to drift out
+        // of sync with the audio.
+        const groupWordTimestamps = getWordTimestamps(seg.start, seg.end, allWords, seg.words);
 
         groups.forEach((group, gi) => {
-          const groupStart = seg.start + gi * groupDuration;
-          const groupEnd = seg.start + (gi + 1) * groupDuration;
+          const [rangeStart, rangeEnd] = groupIndexRanges[gi];
+          const firstWt = groupWordTimestamps[rangeStart];
+          const lastWt = groupWordTimestamps[rangeEnd - 1];
+          const groupStart = firstWt ? firstWt.start : seg.start;
+          const groupEnd = lastWt ? lastWt.end : seg.end;
           const startStr = formatASSTime(groupStart);
           const endStr = formatASSTime(groupEnd);
 

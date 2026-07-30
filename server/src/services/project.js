@@ -835,17 +835,21 @@ async function processVideoBackground(projectId, project, userId, settings, esti
         try {
           const adjustedSegments = clipSegments.map((s) => ({
             start: Math.max(0, s.start - clipStartTime),
-            end: Math.max(0, s.end - clipStartTime),
+            end: Math.max(0, Math.min(s.end, endTime) - clipStartTime),
             text: s.text,
             // Words that ended before the clip's cut point aren't inside this clip at all —
             // drop them instead of clamping to 0, which used to bunch several pre-cut words
             // onto the same start timestamp and made the first caption look scrambled.
+            // Words that start after the clip's end point are likewise outside the clip —
+            // previously these weren't filtered, so a segment straddling the clip's end
+            // boundary kept trailing words (and an unclamped segment.end), inflating the
+            // segment duration used for grouped-caption timing beyond what's actually visible.
             words: (s.words || [])
-              .filter((w) => w.end > clipStartTime)
+              .filter((w) => w.end > clipStartTime && w.start < endTime)
               .map((w) => ({
                 ...w,
                 start: Math.max(0, w.start - clipStartTime),
-                end: Math.max(0, w.end - clipStartTime),
+                end: Math.max(0, Math.min(w.end, endTime) - clipStartTime),
               })),
           }));
           const assPath = path.join(path.dirname(videoPath), `sub_${projectId}_${i}.ass`);
