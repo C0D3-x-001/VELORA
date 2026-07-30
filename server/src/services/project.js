@@ -434,12 +434,13 @@ async function processVideoBackground(projectId, project, userId, settings, esti
     // ── Download ──
     if (project.source_type === "youtube") {
       const dlStart = Date.now();
-      const DOWNLOAD_TIMEOUT_MS = 600000;
+      const DOWNLOAD_TIMEOUT_MS = Number(process.env.DOWNLOAD_TIMEOUT_MS) || 1800000;
       try {
         log(`Downloading video from YouTube...`);
         const downloadPromise = downloadService.downloadVideo(project.source_url, projectId, signal);
+        const timeoutMinutes = Math.round(DOWNLOAD_TIMEOUT_MS / 60000);
         const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("Download timed out after 10 minutes")), DOWNLOAD_TIMEOUT_MS)
+          setTimeout(() => reject(new Error(`Download timed out after ${timeoutMinutes} minutes`)), DOWNLOAD_TIMEOUT_MS)
         );
         const downloaded = await Promise.race([downloadPromise, timeoutPromise]);
         videoPath = downloaded.path;
