@@ -168,7 +168,7 @@ const CAPTION_PRESETS = {
     wordByWord: true,
     groupWords: false,
     groupSize: 1,
-    maxWordsOnScreen: 3,
+    maxWordsOnScreen: 1,
     dimColor: "&H00AAAAAA",
     fontSize: 80,
     fontName: "Impact",

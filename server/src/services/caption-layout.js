@@ -253,28 +253,24 @@ export function attachTiming(layoutWords, wordTimestamps) {
     }));
   }
 
-  const used = new Set();
-  const matched = layoutWords.map((w) => {
+  // Counts differ (e.g. punctuation/contraction splitting upstream changed the
+  // token count). Walk both sequences with a single forward-only pointer instead
+  // of searching the whole array: this matches repeated words ("the", "you know")
+  // to the next unclaimed occurrence in original speech order, so a duplicate
+  // earlier or later in the clip can never steal another word's timestamp.
+  let tsPointer = 0;
+  return layoutWords.map((w) => {
     const cleanTarget = w.word.toLowerCase().replace(/[^a-z]/g, "");
-    for (let i = 0; i < wordTimestamps.length; i++) {
-      if (used.has(i)) continue;
+    for (let i = tsPointer; i < wordTimestamps.length; i++) {
       const cleanTs = wordTimestamps[i].word.toLowerCase().replace(/[^a-z]/g, "");
       if (cleanTs === cleanTarget) {
-        used.add(i);
+        tsPointer = i + 1;
         return { ...w, start: wordTimestamps[i].start, end: wordTimestamps[i].end };
       }
     }
-    return w;
-  });
-
-  return matched.map((w) => {
-    if (w.start != null) return w;
-    const idx = w.index;
-    if (idx < wordTimestamps.length && !used.has(idx)) {
-      used.add(idx);
-      return { ...w, start: wordTimestamps[idx].start, end: wordTimestamps[idx].end };
-    }
-    return w;
+    // No matching word found ahead of the pointer — leave timing unset rather
+    // than guessing from a raw, text-unverified index.
+    return { ...w, start: null, end: null };
   });
 }
 

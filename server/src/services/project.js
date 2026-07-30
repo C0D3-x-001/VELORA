@@ -836,11 +836,16 @@ async function processVideoBackground(projectId, project, userId, settings, esti
             start: Math.max(0, s.start - clipStartTime),
             end: Math.max(0, s.end - clipStartTime),
             text: s.text,
-            words: (s.words || []).map((w) => ({
-              ...w,
-              start: Math.max(0, w.start - clipStartTime),
-              end: Math.max(0, w.end - clipStartTime),
-            })),
+            // Words that ended before the clip's cut point aren't inside this clip at all —
+            // drop them instead of clamping to 0, which used to bunch several pre-cut words
+            // onto the same start timestamp and made the first caption look scrambled.
+            words: (s.words || [])
+              .filter((w) => w.end > clipStartTime)
+              .map((w) => ({
+                ...w,
+                start: Math.max(0, w.start - clipStartTime),
+                end: Math.max(0, w.end - clipStartTime),
+              })),
           }));
           const assPath = path.join(path.dirname(videoPath), `sub_${projectId}_${i}.ass`);
           await generatePremiumCaptionFile(adjustedSegments, {}, assPath, captionPreset, 1080, 1920);
