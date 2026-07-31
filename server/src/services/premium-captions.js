@@ -1,5 +1,5 @@
 import fs from "fs";
-import { computeCenteredGroupPositions } from "./caption-layout.js";
+import { computeCenteredGroupPositions, measureWord } from "./caption-layout.js";
 import { getCaptionStyle } from "./get-caption-style.js";
 
 const W = 1080;
@@ -16,6 +16,13 @@ const MIN_WORD_DURATION = 0.18;
 // When the duration floor extends a word's End, cap it just before the next
 // word actually starts so two captions never overlap/flicker.
 const WORD_END_CAP_GAP = 0.02;
+
+// Long words: a word wider than the safe caption box is shrunk via \fs to fit,
+// but never below this fraction of the preset font size (70% floor).
+const LONG_WORD_SHRINK_FLOOR = 0.7;
+// A word whose estimated glyph width exceeds this share of the safe width is
+// shown alone (window of 1) so it cannot crowd out its neighbors.
+const LONG_WORD_SOLO_PCT = 0.6;
 
 const NON_SPEECH_PATTERN = /^\[.*?\]$|^\(.*?\)$|^\.\.\.$|^…+$|^\s*$/;
 const FILLER_WORDS = new Set(["uh", "um", "ah", "er", "hmm", "hm", "huh"]);
@@ -277,6 +284,30 @@ function applyMinDuration(wordTimestamps) {
   });
 }
 
+// Estimate how much a word/line overflows the safe caption box and derive a
+// \fs shrink factor. scale is clamped at LONG_WORD_SHRINK_FLOOR so we never
+// shrink a word to unreadability even if it still overflows at the floor.
+function getTextFit(text, fontSize, fontWeight, safeWidth) {
+  const width = measureWord(text, fontSize, fontWeight, 0);
+  if (width <= safeWidth) return { width, scale: 1, shrunk: false };
+  const scale = Math.max(LONG_WORD_SHRINK_FLOOR, safeWidth / width);
+  return { width, scale, shrunk: true };
+}
+
+function formatOverflowTag(scale, baseFontSize) {
+  return `\\fs${Math.round(baseFontSize * scale)}`;
+}
+
+// Multipliers of the base font size used by the [V4+ Styles] header for each
+// style. Width estimation for a line must account for the style actually applied.
+const STYLE_FONT_MULTIPLIER = {
+  Normal: 1,
+  Highlight: 1.15,
+  Emphasis1: 1.2,
+  Emphasis2: 1.45,
+  Emphasis3: 1.7,
+};
+
 function hexToASS(hex) {
   if (!hex || hex.startsWith("&H")) return hex || "&H00FFFFFF";
   const rgbaMatch = hex.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+))?\s*\)$/);
@@ -346,6 +377,9 @@ export async function generatePremiumCaptionFile(segments, emphasisMap, outputPa
   });
 
   const marginV = getMarginV(preset, fH);
+  const safeWidth = capStyle.usableWidth;
+  const normalizedFontSize = Math.round((preset.fontSize || 120) * fH / 1920);
+  const fontWeight = preset.bold ? 700 : 400;
 
   let header;
   let dialogueLines = [];
@@ -400,7 +434,6 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         });
         // Fast speech must still be legible: no word flashes for < MIN_WORD_DURATION.
         const wordTimestamps = applyMinDuration(overlapClamped);
-        const normalizedFontSize = Math.round((preset.fontSize || 120) * fH / 1920);
         const verticalPct = preset.verticalPct ?? (preset.position === "center" ? 50 : preset.position === "center-low" ? 60 : 80);
         const maxWordsOnScreen = Math.max(1, preset.maxWordsOnScreen || 1);
         const dimColor = preset.dimColor || preset.primaryColor;
@@ -438,6 +471,15 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             ? wt.word.toUpperCase()
             : wt.word;
 
+          // Long-word handling: measure the word at its actual style size. If it
+          // overflows the safe caption box, it gets a \fs shrink (70% floor); if it
+          // already takes > 60% of the safe width, it is shown alone so it can't
+          // crowd the window's other words.
+          const wordFontSize = Math.round(normalizedFontSize * (STYLE_FONT_MULTIPLIER[styleName] || 1));
+          const wordFit = getTextFit(displayWord, wordFontSize, fontWeight, safeWidth);
+          const overflowTag = wordFit.shrunk ? formatOverflowTag(wordFit.scale, wordFontSize) : "";
+          const solo = wordFit.width > safeWidth * LONG_WORD_SOLO_PCT;
+
           const wordDurationMs = (wt.end - wt.start) * 1000;
           let animation;
           if (wordDurationMs < 200) {
@@ -452,13 +494,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             animation = buildFadeAnimation(preset.animIn, preset.animOut);
           }
 
-          return { start: wt.start, end: wt.end, displayWord, styleName, animation };
+          return { start: wt.start, end: wt.end, displayWord, styleName, animation, overflowTag, solo };
         });
 
         wordInfos.forEach((info, i) => {
           if (!info) return;
 
-          const windowStart = Math.max(0, i - maxWordsOnScreen + 1);
+          const windowMax = info.solo ? 1 : maxWordsOnScreen;
+          const windowStart = Math.max(0, i - windowMax + 1);
           const window = wordInfos.slice(windowStart, i + 1).filter(Boolean);
 
           const groupPositions = computeCenteredGroupPositions(
@@ -467,7 +510,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
               frameWidth: fW,
               frameHeight: fH,
               fontSize: normalizedFontSize,
-              fontWeight: preset.bold ? 700 : 400,
+              fontWeight,
               letterSpacing: 0,
               verticalPct,
             }
@@ -482,7 +525,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
               ? w.animation.replace(/^{/, "").replace(/}$/, "")
               : `\\c${dimColor}`;
             if (wi === 0) {
-              tag = `\\pos(${anchorX},${anchorY})\\an7${tag}`;
+              tag = `\\pos(${anchorX},${anchorY})\\an7${w.overflowTag}${tag}`;
             }
             return `{${tag}}${escapedWord}`;
           });
@@ -520,6 +563,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             effectContent = `{\\1c${preset.highlightColor}\\t(${highlightDelay},${highlightDelay + 60},\\1c&HFFFFFF&)\\fad(60,60)\\b1}`;
           } else {
             effectContent = `{\\fad(100,100)\\b1}`;
+          }
+
+          // Long lines (a long word inside the sentence) get a \fs shrink so the
+          // whole sentence still fits inside the safe caption box.
+          const sentenceFontSize = Math.round(normalizedFontSize * (STYLE_FONT_MULTIPLIER[styleName] || 1));
+          const sentenceFit = getTextFit(allWordsText, sentenceFontSize, fontWeight, safeWidth);
+          if (sentenceFit.shrunk) {
+            effectContent = effectContent.replace(/^\{/, `{\\fs${Math.round(sentenceFontSize * sentenceFit.scale)}`);
           }
 
           dialogueLines.push(`Dialogue: 0,${startStr},${endStr},${styleName},,0,0,0,,${effectContent}${escapeASSText(allWordsText)}`);
@@ -565,6 +616,15 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
           if (dominantType === "question" && !text.trim().endsWith("?")) text += " ?";
           if (maxLevel >= 2 && (dominantType === "punchline" || dominantType === "hook")) {
             text = text.toUpperCase();
+          }
+
+          // A karaoke line built from a long word can exceed the safe box; shrink
+          // the whole run with \fs (70% floor) so it stays inside.
+          const plainRunText = run.map((wt) => wt.word).join(" ");
+          const karaokeFontSize = Math.round(normalizedFontSize * (STYLE_FONT_MULTIPLIER[styleName] || 1));
+          const karaokeFit = getTextFit(plainRunText, karaokeFontSize, fontWeight, safeWidth);
+          if (karaokeFit.shrunk) {
+            text = `{\\fs${Math.round(karaokeFontSize * karaokeFit.scale)}}${text}`;
           }
 
           dialogueLines.push(`Dialogue: 0,${formatASSTime(runStart)},${formatASSTime(runEnd)},${styleName},,0,0,0,,${text}`);
@@ -672,7 +732,16 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             text = text.toUpperCase();
           }
 
-          dialogueLines.push(`Dialogue: 0,${startStr},${endStr},${styleName},,0,0,0,,${animation}${escapeASSText(text)}`);
+          // Long group text (e.g. a very long word in the group) gets a \fs shrink
+          // so the group still fits inside the safe caption box.
+          const groupFontSize = Math.round(normalizedFontSize * (STYLE_FONT_MULTIPLIER[styleName] || 1));
+          const groupFit = getTextFit(text, groupFontSize, fontWeight, safeWidth);
+          let animationWithFs = animation;
+          if (groupFit.shrunk) {
+            animationWithFs = animationWithFs.replace(/^\{/, `{\\fs${Math.round(groupFontSize * groupFit.scale)}`);
+          }
+
+          dialogueLines.push(`Dialogue: 0,${startStr},${endStr},${styleName},,0,0,0,,${animationWithFs}${escapeASSText(text)}`);
         });
       }
     });

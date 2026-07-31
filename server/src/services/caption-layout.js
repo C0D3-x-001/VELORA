@@ -274,4 +274,4 @@ export function attachTiming(layoutWords, wordTimestamps) {
   });
 }
 
-export { DEFAULT_CONFIG };
+export { DEFAULT_CONFIG, measureWord };
