@@ -53,7 +53,16 @@ function computeOverlayLayout(words, config, containerW, containerH) {
 
   const lineH = fontSize * (config.lineHeight || 1.3);
   const totalH = lines.length * lineH;
-  const startY = frameH * (1 - (config.verticalPct || 50) / 100) - totalH / 2;
+  let startY = frameH * (1 - (config.verticalPct || 50) / 100) - totalH / 2;
+
+  // Keep the caption baseline inside the same vertical safe zone the renderer
+  // enforces (Y 200-1420 at the 1080x1920 reference frame), so the preview
+  // never shows captions where they can't be rendered.
+  const SAFE_TOP = 200;
+  const SAFE_BOTTOM = 1420;
+  const lastBaseline = startY + (lines.length - 1) * lineH + fontSize * 0.8 + fontSize * 0.2;
+  const clampedBaseline = Math.min(SAFE_BOTTOM, Math.max(SAFE_TOP, lastBaseline));
+  startY = clampedBaseline - (lines.length - 1) * lineH - fontSize;
 
   const result = [];
   lines.forEach((line, li) => {

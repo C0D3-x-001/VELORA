@@ -5,6 +5,14 @@ import { getCaptionStyle } from "./get-caption-style.js";
 const W = 1080;
 const H = 1920;
 
+// Vertical safe zone: the caption baseline (bottom of text, Alignment 2) must
+// stay within Y [SAFE_ZONE_TOP, SAFE_ZONE_BOTTOM] at the reference height,
+// scaled proportionally for other frame heights. Keeps captions clear of
+// platform UI / rounded corners at the top and bottom of the frame.
+const SAFE_ZONE_TOP = 200;
+const SAFE_ZONE_BOTTOM = 1420;
+const SAFE_ZONE_REFERENCE = 1920;
+
 // Any inter-word gap >= this (seconds) is a real pause — the caption must
 // disappear during it rather than stay visible across the silence.
 const GAP_HIDE_THRESHOLD = 0.4;
@@ -348,17 +356,32 @@ function buildPopupAnimation(accentColor, scaleBase, scaleTarget, animIn, animOu
 }
 
 function getMarginV(preset, frameHeight) {
+  const fH = frameHeight || H;
+  const scale = fH / SAFE_ZONE_REFERENCE;
+  const safeTop = SAFE_ZONE_TOP * scale;
+  const safeBottom = SAFE_ZONE_BOTTOM * scale;
+
   const pos = String(preset.position);
   const pct = parseFloat(pos);
+  let marginV;
   if (!isNaN(pct) && pct >= 0 && pct <= 100) {
-    return Math.round(frameHeight * (1 - pct / 100));
+    marginV = Math.round(fH * (1 - pct / 100));
+  } else {
+    switch (pos) {
+      case "center-low": marginV = Math.round(fH * 0.28);
+        break;
+      case "center": marginV = Math.round(fH * 0.42);
+        break;
+      case "upper": marginV = Math.round(fH - safeTop);
+        break;
+      default: marginV = Math.round(fH - safeBottom);
+    }
   }
-  switch (pos) {
-    case "center-low": return Math.round(frameHeight * 0.28);
-    case "center": return Math.round(frameHeight * 0.42);
-    case "upper": return Math.round(frameHeight * 0.1);
-    default: return Math.round(frameHeight * 0.12);
-  }
+
+  // MarginV is the distance from the bottom edge to the text baseline (bottom of
+  // text, Alignment 2), so baseline Y = fH - marginV. Clamp so the baseline
+  // always lands inside the vertical safe zone [safeTop, safeBottom].
+  return Math.min(fH - safeTop, Math.max(fH - safeBottom, marginV));
 }
 
 export async function generatePremiumCaptionFile(segments, emphasisMap, outputPath, presetName = "classic", frameWidth, frameHeight, options = {}) {

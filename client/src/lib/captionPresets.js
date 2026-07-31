@@ -17,6 +17,7 @@ const PRESET_STYLES = {
     animIn: 0,
     animOut: 0,
     animType: "instant",
+    verticalPct: 55,
   },
   popup: {
     fontName: "Anton",
@@ -36,6 +37,7 @@ const PRESET_STYLES = {
     animIn: 80,
     animOut: 60,
     animType: "bounce",
+    verticalPct: 55,
   },
   bounce: {
     fontName: "Montserrat",
@@ -55,6 +57,7 @@ const PRESET_STYLES = {
     animIn: 150,
     animOut: 100,
     animType: "bounce",
+    verticalPct: 28,
   },
   highlight: {
     fontName: "Poppins",
@@ -74,6 +77,7 @@ const PRESET_STYLES = {
     animIn: 80,
     animOut: 60,
     animType: "fade",
+    verticalPct: 26,
   },
   karaoke: {
     fontName: "Bebas Neue",
@@ -93,6 +97,7 @@ const PRESET_STYLES = {
     animIn: 0,
     animOut: 0,
     animType: "instant",
+    verticalPct: 26,
   },
   classic: {
     fontName: "Inter",
@@ -112,6 +117,7 @@ const PRESET_STYLES = {
     animIn: 100,
     animOut: 80,
     animType: "fade",
+    verticalPct: 26,
   },
   minimal: {
     fontName: "Inter",
@@ -131,6 +137,7 @@ const PRESET_STYLES = {
     animIn: 0,
     animOut: 0,
     animType: "instant",
+    verticalPct: 26,
   },
 };
 
