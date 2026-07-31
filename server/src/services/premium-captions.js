@@ -5,6 +5,10 @@ import { getCaptionStyle } from "./get-caption-style.js";
 const W = 1080;
 const H = 1920;
 
+// Any inter-word gap >= this (seconds) is a real pause — the caption must
+// disappear during it rather than stay visible across the silence.
+const GAP_HIDE_THRESHOLD = 0.4;
+
 const NON_SPEECH_PATTERN = /^\[.*?\]$|^\(.*?\)$|^\.\.\.$|^…+$|^\s*$/;
 const FILLER_WORDS = new Set(["uh", "um", "ah", "er", "hmm", "hm", "huh"]);
 
@@ -225,6 +229,27 @@ function getWordTimestamps(segStart, segEnd, words, realWordTimestamps) {
 
 function escapeASSText(text) {
   return text.replace(/\\/g, "\\\\").replace(/\n/g, "\\N").replace(/[{]/g, "\\{").replace(/[}]/g, "\\}");
+}
+
+// Split an array of { start, end, word } timestamps into runs at real pauses.
+// A gap between consecutive words >= GAP_HIDE_THRESHOLD is a genuine silence:
+// the caption must end with the last word before the pause, and the next word
+// starts a fresh Dialogue event after it. Groups/segments never straddle a gap.
+function splitAtGaps(wordTimestamps) {
+  if (!wordTimestamps || wordTimestamps.length === 0) return [];
+  const runs = [];
+  let current = [wordTimestamps[0]];
+  for (let i = 1; i < wordTimestamps.length; i++) {
+    const gap = wordTimestamps[i].start - wordTimestamps[i - 1].end;
+    if (gap >= GAP_HIDE_THRESHOLD) {
+      runs.push(current);
+      current = [wordTimestamps[i]];
+    } else {
+      current.push(wordTimestamps[i]);
+    }
+  }
+  runs.push(current);
+  return runs;
 }
 
 function hexToASS(hex) {
@@ -492,18 +517,26 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         else if (maxLevel >= 2) styleName = "Emphasis2";
         else if (maxLevel >= 1) styleName = "Highlight";
 
-        const karaokeParts = wordTimestamps.map((wt) => {
-          const delay = Math.round((wt.start - seg.start) * 100);
-          return `{\\kf${delay}}${escapeASSText(wt.word)}`;
+        // Karaoke normally keeps one Dialogue event per segment, which would stay
+        // visible across real pauses. Split at gaps so the line disappears during
+        // genuine silence; \kf fill delays stay relative to each run's own start.
+        const karaokeRuns = splitAtGaps(wordTimestamps);
+        karaokeRuns.forEach((run) => {
+          const runStart = run[0].start;
+          const runEnd = run[run.length - 1].end;
+          const karaokeParts = run.map((wt) => {
+            const delay = Math.round((wt.start - runStart) * 100);
+            return `{\\kf${delay}}${escapeASSText(wt.word)}`;
+          });
+
+          let text = karaokeParts.join(" ");
+          if (dominantType === "question" && !text.trim().endsWith("?")) text += " ?";
+          if (maxLevel >= 2 && (dominantType === "punchline" || dominantType === "hook")) {
+            text = text.toUpperCase();
+          }
+
+          dialogueLines.push(`Dialogue: 0,${formatASSTime(runStart)},${formatASSTime(runEnd)},${styleName},,0,0,0,,${text}`);
         });
-
-        let text = karaokeParts.join(" ");
-        if (dominantType === "question" && !text.trim().endsWith("?")) text += " ?";
-        if (maxLevel >= 2 && (dominantType === "punchline" || dominantType === "hook")) {
-          text = text.toUpperCase();
-        }
-
-        dialogueLines.push(`Dialogue: 0,${formatASSTime(seg.start)},${formatASSTime(seg.end)},${styleName},,0,0,0,,${text}`);
 
       } else {
         let maxLevel = 0;
@@ -525,16 +558,28 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
           : allWords.length;
         const groups = [];
         const groupIndexRanges = [];
-        for (let g = 0; g < allWords.length; g += groupSize) {
-          groups.push(allWords.slice(g, g + groupSize));
-          groupIndexRanges.push([g, Math.min(g + groupSize, allWords.length)]);
-        }
 
         // Use real per-word Whisper timestamps for each group's on-screen window
         // instead of evenly dividing the segment duration — even division ignores
         // pauses/pacing within the segment and was causing captions to drift out
         // of sync with the audio.
         const groupWordTimestamps = getWordTimestamps(seg.start, seg.end, allWords, seg.words);
+
+        // Split the word range into runs at real pauses (gap >= GAP_HIDE_THRESHOLD).
+        // A group never straddles a pause, so the caption disappears during
+        // genuine silence instead of staying visible across it. sub-second gaps
+        // (natural speech cadence) still group together as before.
+        const gapRuns = splitAtGaps(groupWordTimestamps);
+        let globalWordIdx = 0;
+        for (const run of gapRuns) {
+          for (let g = 0; g < run.length; g += groupSize) {
+            const rangeStart = globalWordIdx + g;
+            const rangeEnd = Math.min(rangeStart + groupSize, globalWordIdx + run.length);
+            groups.push(allWords.slice(rangeStart, rangeEnd));
+            groupIndexRanges.push([rangeStart, rangeEnd]);
+          }
+          globalWordIdx += run.length;
+        }
 
         groups.forEach((group, gi) => {
           const [rangeStart, rangeEnd] = groupIndexRanges[gi];
