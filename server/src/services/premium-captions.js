@@ -9,6 +9,14 @@ const H = 1920;
 // disappear during it rather than stay visible across the silence.
 const GAP_HIDE_THRESHOLD = 0.4;
 
+// Fast speech can leave a word on screen for less than a single frame (~33ms).
+// Floor each word's visible duration at this (seconds) so it never flashes.
+const MIN_WORD_DURATION = 0.18;
+
+// When the duration floor extends a word's End, cap it just before the next
+// word actually starts so two captions never overlap/flicker.
+const WORD_END_CAP_GAP = 0.02;
+
 const NON_SPEECH_PATTERN = /^\[.*?\]$|^\(.*?\)$|^\.\.\.$|^…+$|^\s*$/;
 const FILLER_WORDS = new Set(["uh", "um", "ah", "er", "hmm", "hm", "huh"]);
 
@@ -252,6 +260,23 @@ function splitAtGaps(wordTimestamps) {
   return runs;
 }
 
+// Floor each word's visible duration at MIN_WORD_DURATION. Extends the End only
+// (a word is never shown before it is actually spoken). If the extension would
+// overlap the next word's real start, cap it at nextStart - WORD_END_CAP_GAP so
+// two captions never collide/flicker.
+function applyMinDuration(wordTimestamps) {
+  return wordTimestamps.map((wt, i, arr) => {
+    const next = arr[i + 1];
+    const rawDuration = wt.end - wt.start;
+    if (rawDuration >= MIN_WORD_DURATION) return wt;
+    let end = wt.start + MIN_WORD_DURATION;
+    if (next && end >= next.start) {
+      end = Math.max(wt.end, Math.max(wt.start, next.start - WORD_END_CAP_GAP));
+    }
+    return { ...wt, end };
+  });
+}
+
 function hexToASS(hex) {
   if (!hex || hex.startsWith("&H")) return hex || "&H00FFFFFF";
   const rgbaMatch = hex.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+))?\s*\)$/);
@@ -366,13 +391,15 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
       if (preset.wordByWord) {
         const rawWordTimestamps = getWordTimestamps(seg.start, seg.end, allWords, seg.words);
         const OVERLAP_GAP = 0.01;
-        const wordTimestamps = rawWordTimestamps.map((wt, i, arr) => {
+        const overlapClamped = rawWordTimestamps.map((wt, i, arr) => {
           const next = arr[i + 1];
           if (next && wt.end > next.start - OVERLAP_GAP) {
             return { ...wt, end: Math.max(wt.start + 0.03, next.start - OVERLAP_GAP) };
           }
           return wt;
         });
+        // Fast speech must still be legible: no word flashes for < MIN_WORD_DURATION.
+        const wordTimestamps = applyMinDuration(overlapClamped);
         const normalizedFontSize = Math.round((preset.fontSize || 120) * fH / 1920);
         const verticalPct = preset.verticalPct ?? (preset.position === "center" ? 50 : preset.position === "center-low" ? 60 : 80);
         const maxWordsOnScreen = Math.max(1, preset.maxWordsOnScreen || 1);
@@ -468,12 +495,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         });
 
       } else if (preset.animation === "highlight") {
+        const wordTimestamps = applyMinDuration(getWordTimestamps(seg.start, seg.end, allWords, seg.words));
         allWords.forEach((word, _i) => {
           const cleanWord = word.toLowerCase().replace(/[^a-z]/g, "");
           const emph = emphasisWords.get(cleanWord);
           const level = emph?.level || 0;
-
-          const wordTimestamps = getWordTimestamps(seg.start, seg.end, allWords, seg.words);
 
           const wt = wordTimestamps[_i];
           if (!wt) return;
@@ -500,7 +526,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         });
 
       } else if (preset.animation === "karaoke") {
-        const wordTimestamps = getWordTimestamps(seg.start, seg.end, allWords, seg.words);
+        const rawKaraokeTimestamps = getWordTimestamps(seg.start, seg.end, allWords, seg.words);
+        const wordTimestamps = applyMinDuration(rawKaraokeTimestamps);
         let maxLevel = 0;
         let dominantType = "statement";
         allWords.forEach((w) => {
@@ -518,16 +545,21 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         else if (maxLevel >= 1) styleName = "Highlight";
 
         // Karaoke normally keeps one Dialogue event per segment, which would stay
-        // visible across real pauses. Split at gaps so the line disappears during
-        // genuine silence; \kf fill delays stay relative to each run's own start.
-        const karaokeRuns = splitAtGaps(wordTimestamps);
+        // visible across real pauses. Split at gaps (raw timestamps, before the
+        // 0.18s duration floor) so the line disappears during genuine silence;
+        // \kf fill delays stay relative to each run's own start.
+        const karaokeRuns = splitAtGaps(rawKaraokeTimestamps);
+        let karaokeIdx = 0;
         karaokeRuns.forEach((run) => {
           const runStart = run[0].start;
-          const runEnd = run[run.length - 1].end;
-          const karaokeParts = run.map((wt) => {
+          // Use the floored end of the run's last word so a short final word
+          // still satisfies the minimum on-screen duration.
+          const runEnd = wordTimestamps[karaokeIdx + run.length - 1].end;
+          const karaokeParts = run.map((wt, wi) => {
             const delay = Math.round((wt.start - runStart) * 100);
             return `{\\kf${delay}}${escapeASSText(wt.word)}`;
           });
+          karaokeIdx += run.length;
 
           let text = karaokeParts.join(" ");
           if (dominantType === "question" && !text.trim().endsWith("?")) text += " ?";
@@ -563,13 +595,15 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         // instead of evenly dividing the segment duration — even division ignores
         // pauses/pacing within the segment and was causing captions to drift out
         // of sync with the audio.
-        const groupWordTimestamps = getWordTimestamps(seg.start, seg.end, allWords, seg.words);
+        const rawGroupWordTimestamps = getWordTimestamps(seg.start, seg.end, allWords, seg.words);
 
-        // Split the word range into runs at real pauses (gap >= GAP_HIDE_THRESHOLD).
+        // Split the word range into runs at real pauses (gap >= GAP_HIDE_THRESHOLD)
+        // BEFORE flooring durations — otherwise the 0.18s floor could mask a pause.
         // A group never straddles a pause, so the caption disappears during
         // genuine silence instead of staying visible across it. sub-second gaps
         // (natural speech cadence) still group together as before.
-        const gapRuns = splitAtGaps(groupWordTimestamps);
+        const gapRuns = splitAtGaps(rawGroupWordTimestamps);
+        const groupWordTimestamps = applyMinDuration(rawGroupWordTimestamps);
         let globalWordIdx = 0;
         for (const run of gapRuns) {
           for (let g = 0; g < run.length; g += groupSize) {
